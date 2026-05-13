@@ -37,6 +37,23 @@
         },
         {
             "type": "shell",
+            "label": "Build All",
+            "windows": {
+                "command": "${workspaceFolder}/build-all.bat"
+            },
+            "linux": {
+                "command": "${workspaceFoler}build-all.sh"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
             "label": "Clean Everything",
             "command": "${workspaceFolder}/clean.sh",
             "windows": {
