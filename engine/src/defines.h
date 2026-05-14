@@ -79,7 +79,17 @@ STATIC_ASSERT(sizeof(b8) == 1, "b8 must be 8-bit for binary compatability.");
 #endif
 
 #ifdef RQ_EXPORT
-    #define RAPI __declspec(dllexport)
+    #ifdef _WIN32
+        #define RAPI __declspec(dllexport)
+    #else
+        #define RAPI __attribute__((visibility("default")))
+    #endif
+#elif defined(RQ_IMPORT)
+    #ifdef _WIN32
+        #define RAPI __declspec(dllimport)
+    #else
+        #define RAPI
+    #endif
 #else
     #define RAPI
 #endif
