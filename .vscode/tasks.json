@@ -7,7 +7,7 @@
                 "command": "${workspaceFolder}/engine/build.bat"
             },
             "linux": {
-                "command": "${workspaceFoler}/engine/build.sh"
+                "command": "${workspaceFolder}/engine/build.sh"
             },
             "options": {
                 "cwd": "${workspaceFolder}/engine"
@@ -25,7 +25,7 @@
                 "command": "${workspaceFolder}/testbed/build.bat"
             },
             "linux": {
-                "command": "${workspaceFoler}/testbed/build.sh"
+                "command": "${workspaceFolder}/testbed/build.sh"
             },
             "options": {
                 "cwd": "${workspaceFolder}/testbed"
@@ -42,7 +42,7 @@
                 "command": "${workspaceFolder}/build-all.bat"
             },
             "linux": {
-                "command": "${workspaceFoler}build-all.sh"
+                "command": "${workspaceFolder}/build-all.sh"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -50,7 +50,10 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "build"
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "type": "shell",
@@ -63,7 +66,7 @@
                 "cwd": "${workspaceFolder}"
             },
             "group": "build"
-        },
+        }
     ],
     "version": "2.0.0"
 }

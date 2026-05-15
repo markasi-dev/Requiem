@@ -1,14 +1,21 @@
-#!/bin/bash
-# Build script for testbed
+REM Build script for testbed
+@ECHO OFF
+SetLocal EnableDelayedExpansion
 
-cFilenames=$(find . -name "*.c" | tr '\n' ' ')
+REM Get a list of all the .c files
+SET cFilenames=
+FOR /R %%f in (*.c) do (    
+    SET cFilenames=!cFilenames! %%f
+)
 
-assembly="testbed"
-compilerFlags="-g"
-includeFlags="-Isrc -I../engine/src/"
-linkerFlags="-L../bin/ -lengine"
-defines="-D_DEBUG -DRQ_IMPORT"
+REM echo "Files:" %cFilenames%
 
-echo "Building $assembly..."
-clang $cFilenames $compilerFlags -o ../bin/$assembly \
-    $defines $includeFlags $linkerFlags
+SET assembly=testbed
+SET compilerFlags=-g
+REM -Wall -Werror
+SET includeFlags=-Isrc -I../engine/src/
+SET linkerFlags=-L../bin/ -lengine
+SET defines=-D_DEBUG -DRQ_IMPORT
+
+ECHO "Building %assembly%%..."
+clang %cFilenames% %compilerFlags% -o ../bin/%assembly%.exe %defines% %includeFlags% %linkerFlags%

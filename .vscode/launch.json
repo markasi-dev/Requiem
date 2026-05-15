@@ -15,13 +15,13 @@
         {
 
             "name": "(Linux) Launch",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
-            "program": "{workspaceFolder}/bin/testbed/",
+            "program": "${workspaceFolder}/bin/testbed",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/bin/",
-            "environment": [],
+            "environment": []
         }
     ]
 }
