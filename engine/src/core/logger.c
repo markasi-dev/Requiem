@@ -11,6 +11,9 @@
 
 b8 initialize_logging() {
     // TODO: Create a log file.
+
+    RQ_INFO("Initialized Logging.");
+
     return TRUE;
 }
 

@@ -1,4 +1,4 @@
-#include "platform/platform.h"
+#include "platform.h"
 
 #if RQ_PLATFORM_LINUX
 
@@ -15,7 +15,7 @@
     #include <time.h> // nanosleep
 #else
     #include <unistd.h> // usleep
-#endif
+#endif  
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,7 +32,11 @@ typedef struct internal_state {
 
 b8 platform_startup(
     platform_state* plat_state,
-    platform_config config) {
+    i32 x,
+    i32 y,
+    u32 width,
+    u32 height,
+    const char* application_name) {
     
     // Create the internal state.
     plat_state->internal_state = malloc(sizeof(internal_state));
@@ -91,10 +95,10 @@ b8 platform_startup(
         XCB_COPY_FROM_PARENT, // depth
         state->window,
         state->screen->root,    // parent
-        config.x,             
-        config.y,           
-        config.width,
-        config.height,
+        x,             
+        y,           
+        width,
+        height,
         0,                      // No border
         XCB_WINDOW_CLASS_INPUT_OUTPUT, // set our class up
         state->screen->root_visual,
@@ -109,8 +113,8 @@ b8 platform_startup(
         XCB_ATOM_WM_NAME,
         XCB_ATOM_STRING,
         8, // data should be viewed 8 bits at a time
-        strlen(config.application_name),
-        config.application_name);
+        strlen(application_name),
+        application_name);
 
     // Tell the server to notify when the window manager
     // attempts to destroy the window
@@ -219,11 +223,11 @@ b8 platform_pump_messages(platform_state* plat_state) {
     return !quit_flagged;
 }
 
-void* platform_allocate(u64 size, b8 alligned) {
+void* platform_allocate(u64 size, b8 aligned) {
     return malloc(size);
 }
 
-void platform_free(void* block, b8 alligned) {
+void platform_free(void* block, b8 aligned) {
     free(block);
 }
 

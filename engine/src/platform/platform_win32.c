@@ -1,4 +1,4 @@
-#include "platform/platform.h"
+#include "platform.h"
 
 // Windows platform layer.
 #if RQ_PLATFORM_WINDOWS 
@@ -21,7 +21,11 @@
 
     b8 platform_startup(
         platform_state* plat_state,
-        platform_config config) {
+        i32 x,
+        i32 y,
+        u32 width,
+        u32 height,
+        const char* application_name) {
      
         plat_state->internal_state = malloc(sizeof(internal_state));
         internal_state *state = (internal_state *)plat_state->internal_state;
@@ -48,10 +52,10 @@
             return FALSE;
         }
 
-        u32 client_x = config.x;
-        u32 client_y = config.y;
-        u32 client_width = config.width;
-        u32 client_height = config.height;
+        u32 client_x = x;
+        u32 client_y = y;
+        u32 client_width = width;
+        u32 client_height = height;
 
         u32 window_x = client_x;
         u32 window_y = client_y;
@@ -78,7 +82,7 @@
         window_height += border_rect.bottom - border_rect.top;
 
         HWND handle = CreateWindowEx(
-            window_ex_style, "requiem_window_class", config.application_name,
+            window_ex_style, "requiem_window_class", application_name,
             window_style, window_x, window_y, window_width, window_height,
             0, 0, state->h_instance, 0);
         
@@ -127,11 +131,11 @@
         return TRUE;
     }
 
-    void *platform_allocate(u64 size, b8 alligned) {
+    void *platform_allocate(u64 size, b8 aligned) {
         return malloc(size);
     }
 
-    void platform_free(void *block, b8 alligned) {
+    void platform_free(void *block, b8 aligned) {
         free(block);
     }
 
