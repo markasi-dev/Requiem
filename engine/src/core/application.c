@@ -2,11 +2,12 @@
 #include "logger.h"
 
 #include "platform/platform.h"
+#include "core/rq_memory.h"
 
 #include <game_types.h>
 
 // Will grow in size as the engine grows.
-typedef struct application_state { 
+typedef struct { 
     game* game_inst;
     b8 is_running;
     b8 is_suspended;
@@ -57,6 +58,8 @@ b8 application_create(game* game_inst) {
 
 }
 b8 application_run() {
+    RQ_INFO(get_memory_usage_string());
+
     while (app_state.is_running) {
         if (!platform_pump_messages(&app_state.platform)) {
             app_state.is_running = FALSE;

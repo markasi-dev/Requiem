@@ -8,7 +8,7 @@
     #include <windows.h>
     #include <windowsx.h> // param input abstraction
 
-    typedef struct internal_state {
+    typedef struct {
         HINSTANCE h_instance;
         HWND hwnd;
     } internal_state;

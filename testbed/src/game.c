@@ -7,7 +7,7 @@ b8 game_initialize(game* game_inst) {
     return TRUE;
 }
 
-b8 game_update(struct game* game_inst, f32 deltaTime) {
+b8 game_update(struct game* game_inst, f32 deltaTime) {\
     return TRUE;
 }
 

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <string.h>  
 
-typedef struct internal_state {
+typedef struct {
     Display *display;
     xcb_connection_t *connection;
     xcb_window_t window;

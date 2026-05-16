@@ -5,7 +5,7 @@
 struct game;
 
 // Application configuration.
-typedef struct application_config {
+typedef struct {
     // Window starting position x-axis.
     i16 start_pos_x;
 
