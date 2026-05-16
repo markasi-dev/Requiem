@@ -38,4 +38,4 @@ RAPI void* rq_copy_memory(void* dest, const void* source, u64 size);
 
 RAPI void* rq_set_memory(void* dest, i32 value, u64 size);
 
-RAPI char* get_memory_usage_string();
+RAPI char* get_memory_usage_string(void);
