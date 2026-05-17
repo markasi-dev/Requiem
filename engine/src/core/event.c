@@ -59,6 +59,11 @@ b8 event_register(u16 code, void* listener, PFN_on_event on_event) {
         state.registered[code].events = darray_create(registered_event);
     }
 
+    if (code >= MAX_MESSAGE_CODES) { // I have no clue how the fuck this could happen but hey! Always check.
+        RQ_FATAL("YOU HAVE EXCEEDED THE MAX AMOUNT OF MESSAGE CODES! EVENT CODE %u EXCEEDS MAX MESSAGE CODES (%u)", code, MAX_MESSAGE_CODES);
+        return FALSE;
+    }
+
     u64 registered_count = darray_length(state.registered[code].events);
     for (u64 i = 0; i < registered_count; i++) {
         if (state.registered[code].events[i].listener == listener) {
@@ -86,6 +91,11 @@ b8 event_unregister(u16 code, void* listener, PFN_on_event on_event) {
         return FALSE;
     }
 
+    if (code >= MAX_MESSAGE_CODES) {
+        RQ_FATAL("YOU HAVE EXCEEDED THE MAX AMOUNT OF MESSAGE CODES! EVENT CODE %u EXCEEDS MAX MESSAGE CODES (%u)", code, MAX_MESSAGE_CODES);
+        return FALSE;
+    }
+
     u64 registered_count = darray_length(state.registered[code].events);
     for (u64 i = 0; i < registered_count; i++) {
         registered_event e = state.registered[code].events[i];
@@ -108,6 +118,11 @@ b8 event_fire(u16 code, void* sender, event_context context) {
 
     if (state.registered[code].events == 0) {
         // TODO: Warn.
+        return FALSE;
+    }
+
+    if (code >= MAX_MESSAGE_CODES) { 
+        RQ_FATAL("YOU HAVE EXCEEDED THE MAX AMOUNT OF MESSAGE CODES! EVENT CODE %u EXCEEDS MAX MESSAGE CODES (%u)", code, MAX_MESSAGE_CODES);
         return FALSE;
     }
 

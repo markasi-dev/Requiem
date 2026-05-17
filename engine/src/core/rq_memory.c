@@ -44,7 +44,7 @@ void shutdown_memory() {
 void* rq_allocate(u64 size, memory_tag tag) {
     if (tag == MEMORY_TAG_UNKNOWN) {
         RQ_WARN("rq_allocate called using MEMORY_TAG_UNKNOWN. Please re-class this allocation.");
-    }
+    };
 
     stats.total_allocated += size;
     stats.tagged_allocations[tag] += size;

@@ -1,13 +1,14 @@
 #include "game.h"
 
 #include <core/logger.h>
+#include <core/input.h>
 
 b8 game_initialize(game* game_inst) {
     RQ_DEBUG("game_initialize() called.")
     return TRUE;
 }
 
-b8 game_update(struct game* game_inst, f32 deltaTime) {\
+b8 game_update(struct game* game_inst, f32 deltaTime) {
     return TRUE;
 }
 

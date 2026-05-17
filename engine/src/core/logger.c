@@ -9,7 +9,7 @@
 #include <stdarg.h>
 
 
-b8 initialize_logging() {
+b8 logging_initialize() {
     // TODO: Create a log file.
 
     RQ_INFO("Initialized Logging.");
@@ -17,7 +17,7 @@ b8 initialize_logging() {
     return TRUE;
 }
 
-void shutdown_logging() {
+void logging_shutdown() {
     // TODO: Cleanup logging/write queued entries
 }
 

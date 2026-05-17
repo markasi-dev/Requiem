@@ -22,8 +22,8 @@ typedef enum {
     LOG_LEVEL_TRACE = 5
 } log_level;
 
-b8 initialize_logging();
-void shutdown_logging();
+b8 logging_initialize();
+void logging_shutdown();
 
 RAPI void log_output(log_level level, const char* msg, ...);
 
