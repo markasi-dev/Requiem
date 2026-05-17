@@ -5,6 +5,7 @@
 
     #include "core/logger.h"
     #include "core/input.h"
+    #include "core/rq_string.h"
 
     #include <windows.h>
     #include <windowsx.h> // param input abstraction
@@ -120,6 +121,9 @@
             DestroyWindow(state->hwnd);
             state->hwnd = 0;
         }
+
+        free(state);
+        plat_state->internal_state = 0;
     }
 
     b8 platform_pump_messages(platform_state* plat_state) {
@@ -158,7 +162,7 @@
         static u8 levels[6] = {64, 4, 6, 2, 1, 8};
         SetConsoleTextAttribute(console_handle, levels[color]);
         OutputDebugStringA(message);
-        u64 length = strlen(message);
+        u64 length = string_length(message);
         LPDWORD number_written = 0;
         WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), message, (DWORD)length, number_written, 0);
     }
@@ -169,7 +173,7 @@
         static u8 levels[6] = {64, 4, 6, 2, 1, 8};
         SetConsoleTextAttribute(console_handle, levels[color]);
         OutputDebugStringA(message);
-        u64 length = strlen(message);
+        u64 length = string_length(message);
         LPDWORD number_written = 0;
         WriteConsole(GetStdHandle(STD_ERROR_HANDLE), message, (DWORD)length, number_written, 0);
     }
