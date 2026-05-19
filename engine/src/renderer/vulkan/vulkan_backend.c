@@ -107,9 +107,9 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
 #if defined(_DEBUG)
     RQ_DEBUG("Creating Vulkan debugger...");
     u32 log_severity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT; // |
-                                                                        //      VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-                                                                        //      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
+                      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
     
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
     debug_create_info.messageSeverity = log_severity;
@@ -143,6 +143,15 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
 }
 
 void vulkan_renderer_backend_shutdown(renderer_backend* backend) {
+
+    RQ_DEBUG("Destroying Vulkan device...");
+    vulkan_device_destroy(&context);
+
+    RQ_DEBUG("Destroying Vulkan surface...");
+    if (context.surface) {
+        vkDestroySurfaceKHR(context.instance, context.surface, context.allocator);
+        context.surface = 0;
+    }
 
     RQ_DEBUG("Destroying Vulkan debugger...");
     if (context.debug_messenger) {
