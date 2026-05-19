@@ -23,15 +23,17 @@
             if (expr) {                                                  \
             } else {                                                     \
                 report_assertion_failure(#expr, "", __FILE__, __LINE__); \
+                debugBreak();                                             \
             }                                                            \
         }                                                                
 
-    #define RQ_ASSERT_MSG(expr, msg)                                     \
-        {                                                                \
-            if (expr) {                                                  \
-            } else {                                                     \
-                report_assertion_failure(#expr, msg, __FILE__, __LINE__) \
-            }                                                            \
+    #define RQ_ASSERT_MSG(expr, msg)                                      \
+        {                                                                 \
+            if (expr) {                                                   \
+            } else {                                                      \
+                report_assertion_failure(#expr, msg, __FILE__, __LINE__); \
+                debugBreak();                                             \
+            }                                                             \
         }                                                                
 
     #ifdef _DEBUG

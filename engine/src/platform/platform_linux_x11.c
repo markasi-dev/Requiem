@@ -7,6 +7,10 @@
 #include "core/input.h"
 #include "core/rq_string.h"
 
+#include "containers/darray.h"
+
+#include "renderer/vulkan/vulkan_backend.h"
+
 #include <xcb/xcb.h>
 #include <X11/keysym.h>
 #include <X11/XKBlib.h> 
@@ -24,6 +28,10 @@
 #include <stdio.h>
 #include <string.h>  
 
+#define VULKAN_USE_PLATFORM_XCB_KHR
+#include <vulkan/vulkan.h>
+#include "renderer/vulkan/vulkan_types.inl"
+
 typedef struct {
     Display *display;
     xcb_connection_t *connection;
@@ -31,6 +39,7 @@ typedef struct {
     xcb_screen_t *screen;
     xcb_atom_t wm_protocols;
     xcb_atom_t wm_delete_win;
+    VkSurfaceKHR surface;
 } internal_state;
 
 // Key translation
@@ -313,6 +322,32 @@ void platform_sleep(u64 ms) {
         }
         usleep((ms % 1000) * 1000);
     #endif
+}
+
+void platform_get_required_extension_names(const char*** names_darray) {
+    darray_push(*names_darray, &"VK_KHR_xcb_surface");
+}
+
+b8 platform_create_vulkan_surface(platform_state *plat_state, vulkan_context* context) {
+    internal_state *state = (internal_state *)plat_state->internal_state;
+
+    VkXcbSurfaceCreateInfoKHR create_info = {VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR};
+    create_info.connection = state->connection;
+    create_info.window = state->window;
+
+    VkResult result = VkCreateXcbSurfaceKHR(
+        context->instance,
+        &create_info,
+        context->allocator,
+        &state->surface,);
+    if (result != VK_SUCCESS) {
+        RQ_FATAL("Vulkan surface failed to be created.");
+        return FALSE;
+    }
+
+    context->surface = state->surface;
+    return TRUE;
+
 }
 
 keycodes translate_keycode(u32 x_keycode) {

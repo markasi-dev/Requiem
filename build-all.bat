@@ -13,5 +13,4 @@ CALL build.bat
 POPD
 IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
-ECHO "[Half life scientist]: Everything seems to be in order..."
-ECHO "All assemblies build successfully."
+ECHO "[Half life scientist]: Everything... seems to be in order!"

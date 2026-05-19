@@ -2,10 +2,50 @@
 
 #include "defines.h"
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.h> // our sweet baby
 
+#include "core/asserts.h"
+
+#define INVALID_ID 0xFFFFFFFF
+
+#define VK_CHECK(expr)                                      \
+{                                                           \
+    VkResult result = (expr);                               \
+    if (result != VK_SUCCESS && result != VK_INCOMPLETE) {  \
+        RQ_FATAL("Vulkan call failed with %d", result);     \
+        RQ_ASSERT(FALSE);                                   \
+    }                                                       \
+}
+
+typedef struct vulkan_swapchain_support_info {
+    VkSurfaceCapabilitiesKHR capabilities;
+    u32 format_count;
+    VkSurfaceFormatKHR* formats;
+    u32 present_mode_count;
+    VkPresentModeKHR* present_modes;
+} vulkan_swapchain_support_info;
+
+typedef struct vulkan_device {
+    VkPhysicalDevice physical_device;
+    VkDevice logical_device;
+    vulkan_swapchain_support_info swapchain_support;
+    u32 graphics_queue_index;
+    u32 present_queue_index;
+    u32 transfer_queue_index;
+
+    VkPhysicalDeviceProperties properties;
+    VkPhysicalDeviceFeatures features;
+    VkPhysicalDeviceMemoryProperties memory;    
+} vulkan_device;
 
 typedef struct vulkan_context {
     VkInstance instance;
     VkAllocationCallbacks* allocator;
+    VkSurfaceKHR surface;
+
+#if defined(_DEBUG) 
+    VkDebugUtilsMessengerEXT debug_messenger;
+#endif
+
+    vulkan_device device;
 } vulkan_context;

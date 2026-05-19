@@ -36,7 +36,7 @@ int main(void){
 
     // Begin game loop.
     if (!application_run()) {
-        RQ_INFO("Application did not shutdown smoothly and gracefully.");
+        RQ_INFO("Application did not shutdown gracefully.");
         return 2;
     }
 

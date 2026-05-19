@@ -7,6 +7,7 @@ SET cFilenames=
 FOR /R %%f in (*.c) do (
     SET cFilenames=!cFilenames! %%f
 )
+ ECHO "Files: %cFilenames%"
 
 REM echo "Files:" %cFilenames%
 

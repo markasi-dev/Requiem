@@ -13,5 +13,5 @@ pushd testbed > /dev/null
 source build.sh
 popd > /dev/null
 
-echo "[Half life scientist]: Everything seems to be in order..."
+echo "[Half life scientist]: Everything... seems to be in order!"
 echo "All assemblies built successfully."
