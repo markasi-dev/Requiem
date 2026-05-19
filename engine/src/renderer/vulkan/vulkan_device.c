@@ -73,7 +73,7 @@ b8 vulkan_device_create(vulkan_context* context) {
         //}
         queue_create_infos[i].flags = 0;
         queue_create_infos[i].pNext = 0;
-        f32 queue_priority = 1.0f; // default
+        static f32 queue_priority = 1.0f; // default
         queue_create_infos[i].pQueuePriorities = &queue_priority;
     }
 
@@ -132,14 +132,14 @@ void vulkan_device_destroy(vulkan_context* context) {
     context->device.transfer_queue = 0;
  
     // Destroy the logical device
-    RQ_INFO("Destroying logical device...");
+    RQ_DEBUG("Destroying logical device...");
     if (context->device.logical_device) {
         vkDestroyDevice(context->device.logical_device, context->allocator);
         context->device.logical_device = 0;
     }
 
     // Physical devices cannot be destroyed! We must release them...
-    RQ_INFO("Releasing physical device resources...");
+    RQ_DEBUG("Releasing physical device resources...");
     context->device.physical_device = 0;
 
     if (context->device.swapchain_support.formats) {

@@ -46,6 +46,8 @@ STATIC_ASSERT(sizeof(b8) == 1, "b8 must be 8-bit for binary compatability.");
 #define TRUE 1
 #define FALSE 0
 
+#define INVALID_ID 0xFFFFFFFF
+
 // Platform detection
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
     #define RQ_PLATFORM_WINDOWS 1
@@ -93,3 +95,6 @@ STATIC_ASSERT(sizeof(b8) == 1, "b8 must be 8-bit for binary compatability.");
 #else
     #define RAPI
 #endif
+
+#define RQ_CLAMP(value, min, max) (value <= min) ? min : (value >= max) ? max \
+                                                                        : value;

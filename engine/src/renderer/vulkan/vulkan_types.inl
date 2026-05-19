@@ -6,8 +6,6 @@
 
 #include "core/asserts.h"
 
-#define INVALID_ID 0xFFFFFFFF
-
 #define VK_CHECK(expr)                                      \
 {                                                           \
     VkResult result = (expr);                               \
@@ -42,7 +40,19 @@ typedef struct vulkan_device {
     VkPhysicalDeviceMemoryProperties memory;    
 } vulkan_device;
 
+typedef struct vulkan_swapchain {
+    VkSurfaceFormatKHR image_format;
+    u8 max_frames_in_flight;
+    VkSwapchainKHR handle;
+    u32 image_count;
+    VkImage* images;
+    VkImageView* views;
+} vulkan_swapchain;
+
 typedef struct vulkan_context {
+
+    u32 framebuffer_width, framebuffer_height;
+
     VkInstance instance;
     VkAllocationCallbacks* allocator;
     VkSurfaceKHR surface;

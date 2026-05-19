@@ -1,0 +1,25 @@
+"filename", "language", "C", "C++", "Batch", "Shell Script", "comment", "blank", "total"
+"c:\Dev\Engine\Requiem\code\engine\build.bat", "Batch", 0, 0, 14, 0, 4, 4, 22
+"c:\Dev\Engine\Requiem\code\engine\build.sh", "Shell Script", 0, 0, 0, 9, 2, 1, 12
+"c:\Dev\Engine\Requiem\code\engine\src\containers\darray.c", "C", 97, 0, 0, 0, 3, 19, 119
+"c:\Dev\Engine\Requiem\code\engine\src\containers\darray.h", "C++", 0, 48, 0, 0, 7, 21, 76
+"c:\Dev\Engine\Requiem\code\engine\src\defines.h", "C++", 0, 73, 0, 0, 11, 13, 97
+"c:\Dev\Engine\Requiem\code\engine\src\entry.h", "C++", 0, 28, 0, 0, 8, 10, 46
+"c:\Dev\Engine\Requiem\code\engine\src\game_types.h", "C++", 0, 10, 0, 0, 10, 7, 27
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform.h", "C++", 0, 23, 0, 0, 0, 8, 31
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform_linux_x11.c", "C", 498, 0, 0, 0, 43, 79, 620
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform_win32.c", "C", 224, 0, 0, 0, 27, 53, 304
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer.backend.c", "C", 21, 0, 0, 0, 0, 6, 27
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_backend.h", "C++", 0, 5, 0, 0, 0, 3, 8
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_frontend.c", "C", 36, 0, 0, 0, 3, 13, 52
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_frontend.h", "C++", 0, 8, 0, 0, 0, 5, 13
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_types.inl", "C++", 0, 19, 0, 0, 1, 9, 29
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_backend.c", "C", 152, 0, 0, 0, 10, 41, 203
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_backend.h", "C++", 0, 7, 0, 0, 0, 4, 11
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_device.c", "C", 381, 0, 0, 0, 35, 67, 483
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_device.h", "C++", 0, 8, 0, 0, 0, 4, 12
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_platform.h", "C++", 0, 8, 0, 0, 4, 5, 17
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_swapchain.c", "C", 49, 0, 0, 0, 3, 9, 61
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_swapchain.h", "C++", 0, 29, 0, 0, 4, 6, 39
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_types.inl", "C++", 0, 51, 0, 0, 0, 14, 65
+"Total", "-", 1458, 317, 14, 9, 175, 401, 2374

@@ -1,0 +1,17 @@
+"filename", "language", "C++", "C", "comment", "blank", "total"
+"c:\Dev\Engine\Requiem\code\engine\src\core\application.c", "C", 0, 149, 12, 41, 202
+"c:\Dev\Engine\Requiem\code\engine\src\core\application.h", "C++", 12, 0, 6, 9, 27
+"c:\Dev\Engine\Requiem\code\engine\src\core\asserts.h", "C++", 44, 0, 4, 11, 59
+"c:\Dev\Engine\Requiem\code\engine\src\core\clock.c", "C", 0, 14, 0, 4, 18
+"c:\Dev\Engine\Requiem\code\engine\src\core\clock.h", "C++", 9, 0, 3, 5, 17
+"c:\Dev\Engine\Requiem\code\engine\src\core\event.c", "C", 0, 100, 14, 26, 140
+"c:\Dev\Engine\Requiem\code\engine\src\core\event.h", "C++", 34, 0, 11, 20, 65
+"c:\Dev\Engine\Requiem\code\engine\src\core\input.c", "C", 0, 157, 19, 33, 209
+"c:\Dev\Engine\Requiem\code\engine\src\core\input.h", "C++", 147, 0, 3, 22, 172
+"c:\Dev\Engine\Requiem\code\engine\src\core\logger.c", "C", 0, 33, 7, 14, 54
+"c:\Dev\Engine\Requiem\code\engine\src\core\logger.h", "C", 0, 45, 11, 17, 73
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.c", "C", 0, 91, 3, 19, 113
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.h", "C++", 30, 0, 1, 10, 41
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.c", "C", 0, 15, 0, 4, 19
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.h", "C++", 5, 0, 0, 5, 10
+"Total", "-", 281, 604, 94, 240, 1219
