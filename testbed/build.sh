@@ -5,8 +5,8 @@ cFilenames=$(find . -name "*.c" | tr '\n' ' ')
 
 assembly="testbed"
 compilerFlags="-g"
-includeFlags="-Isrc -I../engine/src/"
-linkerFlags="-L../bin -lengine -Wl,-rpath,\$ORIGIN"
+includeFlags="-Isrc -I../requiem/src/"
+linkerFlags="-L../bin -lrequiem -Wl,-rpath,\$ORIGIN"
 defines="-D_DEBUG -DRQ_IMPORT"
 
 echo "Building $assembly..."

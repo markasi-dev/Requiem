@@ -117,7 +117,6 @@ b8 application_run() {
                 break;
             }
 
-            // TODO: Stop doing this disgusting shit (Refactor packet creation).
             render_packet packet;
             packet.delta_time = delta;
             renderer_draw_frame(&packet);

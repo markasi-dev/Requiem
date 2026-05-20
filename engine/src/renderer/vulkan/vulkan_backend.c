@@ -1,6 +1,7 @@
 #include "vulkan_backend.h"
 #include "vulkan_device.h"
 #include "vulkan_platform.h"
+#include "vulkan_renderpass.h"
 #include "vulkan_swapchain.h"
 #include "vulkan_types.inl"
 
@@ -113,9 +114,9 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
 #if defined(_DEBUG)
     RQ_DEBUG("Creating Vulkan debugger...");
     u32 log_severity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;/* |
                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-                      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
+                      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;*/
     
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
     debug_create_info.messageSeverity = log_severity;
@@ -150,12 +151,23 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
         context.framebuffer_width,
         context.framebuffer_height,
         &context.swapchain);
+
+    vulkan_renderpass_create(
+        &context,
+        &context.main_renderpass,
+        0, 0, context.framebuffer_width, context.framebuffer_height,
+        0.0f, 0.0f, 0.2f, 1.0f,
+        1.0f,
+        0);
     
     RQ_INFO("Vulkan renderer initialized successfully.");
     return TRUE;
 }
 
 void vulkan_renderer_backend_shutdown(renderer_backend* backend) {
+
+    RQ_DEBUG("Destroying Vulkan Renderpass...");
+    vulkan_renderpass_destroy(&context, &context.main_renderpass);
 
     RQ_DEBUG("Destroying Vulkan swapchain...");
     vulkan_swapchain_destroy(&context, &context.swapchain);
