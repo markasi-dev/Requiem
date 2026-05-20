@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-#include <vulkan/vulkan.h> // our sweet baby
+#include <vulkan/vulkan.h> 
 
 #include "core/asserts.h"
 
@@ -38,7 +38,17 @@ typedef struct vulkan_device {
     VkPhysicalDeviceProperties properties;
     VkPhysicalDeviceFeatures features;
     VkPhysicalDeviceMemoryProperties memory;    
+
+    VkFormat depth_format;
 } vulkan_device;
+
+typedef struct vulkan_image {
+    VkImage handle;
+    VkDeviceMemory memory;
+    VkImageView view;
+    u32 width;
+    u32 height;
+} vulkan_image;
 
 typedef struct vulkan_swapchain {
     VkSurfaceFormatKHR image_format;
@@ -46,7 +56,9 @@ typedef struct vulkan_swapchain {
     VkSwapchainKHR handle;
     u32 image_count;
     VkImage* images;
-    VkImageView* views;
+    VkImageView* views; // LET ME SEE YOUR IMAGE
+    
+    vulkan_image depth_attachment;
 } vulkan_swapchain;
 
 typedef struct vulkan_context {
@@ -62,4 +74,13 @@ typedef struct vulkan_context {
 #endif
 
     vulkan_device device;
+
+    vulkan_swapchain swapchain;
+    u32 image_index;
+    u32 current_frame;
+
+    b8 recreating_swapchain;
+
+    i32 (*find_memory_index)(u32 type_filter, u32 property_flags);
+
 } vulkan_context;

@@ -1,6 +1,7 @@
 #include "vulkan_backend.h"
 #include "vulkan_device.h"
 #include "vulkan_platform.h"
+#include "vulkan_swapchain.h"
 #include "vulkan_types.inl"
 
 #include "core/logger.h"
@@ -17,7 +18,12 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vk_debug_callback(
     const VkDebugUtilsMessengerCallbackDataEXT* callback_data,
     void* user_data);
 
+i32 find_memory_index(u32 type_filter, u32 property_flags);
+
 b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* application_name, struct platform_state* plat_state) {
+
+    // Func pointers
+    context.find_memory_index = find_memory_index;
 
     //TODO: Custom allocator
     context.allocator = 0;
@@ -137,12 +143,22 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
         RQ_ERROR("Vulkan device failed to be created.");
         return FALSE;
     }
+
+    // Swapchain creation.
+    vulkan_swapchain_create(
+        &context,
+        context.framebuffer_width,
+        context.framebuffer_height,
+        &context.swapchain);
     
     RQ_INFO("Vulkan renderer initialized successfully.");
     return TRUE;
 }
 
 void vulkan_renderer_backend_shutdown(renderer_backend* backend) {
+
+    RQ_DEBUG("Destroying Vulkan swapchain...");
+    vulkan_swapchain_destroy(&context, &context.swapchain);
 
     RQ_DEBUG("Destroying Vulkan device...");
     vulkan_device_destroy(&context);
@@ -200,4 +216,19 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vk_debug_callback(
             break;
     }
     return VK_FALSE;
+}
+
+i32 find_memory_index(u32 type_filter, u32 property_flags) {
+    VkPhysicalDeviceMemoryProperties memory_properties;
+    vkGetPhysicalDeviceMemoryProperties(context.device.physical_device, &memory_properties);
+
+    for (u32 i = 0; i < memory_properties.memoryTypeCount; ++i) {
+        // Check each memory type to see if its bit is set to 1.
+        if (type_filter & (i << i) && (memory_properties.memoryTypes[i].propertyFlags & property_flags) == property_flags) {
+            return 1;
+        }
+    }
+
+    RQ_WARN("Unable to find suitable memory type");
+    return -1;
 }

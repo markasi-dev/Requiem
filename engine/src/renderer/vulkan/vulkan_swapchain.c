@@ -1,8 +1,9 @@
+#include "vulkan_device.h"
+#include "vulkan_image.h"
 #include "vulkan_swapchain.h"
 
 #include "core/logger.h"
 #include "core/rq_memory.h"
-#include "vulkan_device.h"
 
 void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* swapchain);
 void destroy(vulkan_context* context, vulkan_swapchain* swapchain);
@@ -85,7 +86,6 @@ void vulkan_swapchain_present(
     }
 }
 
-//-------CREATE-----------------------------------------------------------------------------
 void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* swapchain) {
     VkExtent2D swapchain_extent = {width, height}; // Kind of like a rectangle.
     swapchain->max_frames_in_flight = 2;
@@ -133,9 +133,103 @@ void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* sw
     VkExtent2D max = context->device.swapchain_support.capabilities.maxImageExtent;
     swapchain_extent.width = RQ_CLAMP(swapchain_extent.width, min.width, max.width);
     swapchain_extent.height = RQ_CLAMP(swapchain_extent.height, min.height, max.height);
+
+    u32 image_count = context->device.swapchain_support.capabilities.minImageCount + 1;
+    if (context->device.swapchain_support.capabilities.maxImageCount > 0 && image_count > context->device.swapchain_support.capabilities.maxImageCount) {
+        image_count = context->device.swapchain_support.capabilities.maxImageCount;
+    }
+
+    //----Swapchain create info------------------
+    VkSwapchainCreateInfoKHR swapchain_create_info = {VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR};
+    swapchain_create_info.surface = context->surface;
+    swapchain_create_info.minImageCount = image_count;
+    swapchain_create_info.imageFormat = swapchain->image_format.format;
+    swapchain_create_info.imageColorSpace = swapchain->image_format.colorSpace;
+    swapchain_create_info.imageExtent = swapchain_extent;
+    swapchain_create_info.imageArrayLayers = 1;
+    swapchain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    // Setup the queue family indices
+    if (context->device.graphics_queue_index != context->device.present_queue_index) {
+        u32 queueFamilyIndices[] = {
+            (u32)context->device.graphics_queue_index,
+            (u32)context->device.present_queue_index};
+        swapchain_create_info.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        swapchain_create_info.queueFamilyIndexCount = 2;
+        swapchain_create_info.pQueueFamilyIndices = queueFamilyIndices;
+    } else {
+        swapchain_create_info.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        swapchain_create_info.queueFamilyIndexCount = 0;
+        swapchain_create_info.pQueueFamilyIndices = 0;
+    }
+
+    swapchain_create_info.preTransform = context->device.swapchain_support.capabilities.currentTransform;
+    swapchain_create_info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    swapchain_create_info.presentMode = present_mode;
+    swapchain_create_info.clipped = VK_TRUE;
+    swapchain_create_info.oldSwapchain = 0;
+
+    // The main attraction. How attractive!!
+    VK_CHECK(vkCreateSwapchainKHR(context->device.logical_device, &swapchain_create_info, context->allocator, &swapchain->handle));
+
+    // Start with a frame index of zero.
+    context->current_frame = 0;
+
+    // Images
+    swapchain->image_count = 0;
+    VK_CHECK(vkGetSwapchainImagesKHR(context->device.logical_device, swapchain->handle, &swapchain->image_count, 0));
+    if (!swapchain->images) { // If NULL...
+        swapchain->images = (VkImage*)rq_allocate(sizeof(VkImage) * swapchain->image_count, MEMORY_TAG_RENDERER);
+    }  
+    if (!swapchain->views) {
+        swapchain->views = (VkImageView*)rq_allocate(sizeof(VkImageView) * swapchain->image_count, MEMORY_TAG_RENDERER);
+    }
+    VK_CHECK(vkGetSwapchainImagesKHR(context->device.logical_device, swapchain->handle, &swapchain->image_count, swapchain->images));
+
+    // Views 
+    for (u32 i = 0; i < swapchain->image_count; i++) {
+        VkImageViewCreateInfo view_info = {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO};
+        view_info.image = swapchain->images[i];
+        view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        view_info.format = swapchain->image_format.format;
+        view_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        view_info.subresourceRange.baseMipLevel = 0;
+        view_info.subresourceRange.levelCount = 1;
+        view_info.subresourceRange.baseArrayLayer = 0;
+        view_info.subresourceRange.layerCount = 1;
+
+        VK_CHECK(vkCreateImageView(context->device.logical_device, &view_info, context->allocator, &swapchain->views[i]));
+    }
+
+    // Depth resources
+    if (!vulkan_device_detect_depth_format(&context->device)) {
+        context->device.depth_format = VK_FORMAT_UNDEFINED;
+        RQ_FATAL("Failed to find a supported format!");
+    }
+
+    // Create depth image and its view.
+    vulkan_image_create(
+        context,
+        VK_IMAGE_TYPE_2D,
+        swapchain_extent.width,
+        swapchain_extent.height,
+        context->device.depth_format,
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+        TRUE,
+        VK_IMAGE_ASPECT_DEPTH_BIT,
+        &swapchain->depth_attachment);
+    
+    RQ_INFO("Swapchain created successfully");
 }
-//-------CREATE END-----------------------------------------------------------------------------
 
 void destroy(vulkan_context* context, vulkan_swapchain* swapchain) {
+    vulkan_image_destroy(context, &swapchain->depth_attachment);
 
+    for (u32 i = 0; i < swapchain->image_count; ++i) {
+        vkDestroyImageView(context->device.logical_device, swapchain->views[i], context->allocator);
+    }
+
+    vkDestroySwapchainKHR(context->device.logical_device, swapchain->handle, context->allocator);
 }
