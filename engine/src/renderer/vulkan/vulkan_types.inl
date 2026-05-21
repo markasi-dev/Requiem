@@ -35,6 +35,8 @@ typedef struct vulkan_device {
     VkQueue present_queue;
     VkQueue transfer_queue;
 
+    VkCommandPool graphics_command_pool;
+
     VkPhysicalDeviceProperties properties;
     VkPhysicalDeviceFeatures features;
     VkPhysicalDeviceMemoryProperties memory;    
@@ -70,6 +72,13 @@ typedef struct vulkan_renderpass {
     vulkan_renderpass_state state;
 } vulkan_renderpass;
 
+typedef struct vulkan_framebuffer {
+    VkFramebuffer handle;
+    u32 attachment_count;
+    VkImageView* attachments;
+    vulkan_renderpass* renderpass;
+} vulkan_framebuffer;
+
 typedef struct vulkan_swapchain {
     VkSurfaceFormatKHR image_format;
     u8 max_frames_in_flight;
@@ -79,6 +88,8 @@ typedef struct vulkan_swapchain {
     VkImageView* views; // LET ME SEE YOUR IMAGE
     
     vulkan_image depth_attachment;
+
+    vulkan_framebuffer* framebuffers;
 } vulkan_swapchain;
 
 typedef enum vulkan_command_buffer_state {
@@ -96,9 +107,17 @@ typedef struct vulkan_command_buffer {
     vulkan_command_buffer_state state;
 } vulkan_command_buffer;
 
+typedef struct vulkan_fence {
+    VkFence handle;
+    b8 is_signaled;
+} vulkan_fence;
+
 typedef struct vulkan_context {
 
     u32 framebuffer_width, framebuffer_height;
+
+    u64 framebuffer_size_generation;
+    u64 framebuffer_size_last_generation;
 
     VkInstance instance;
     VkAllocationCallbacks* allocator;
@@ -112,6 +131,21 @@ typedef struct vulkan_context {
 
     vulkan_swapchain swapchain;
     vulkan_renderpass main_renderpass;
+
+    // darray
+    vulkan_command_buffer* graphics_command_buffers;
+
+    // darray
+    VkSemaphore* image_available_semaphores;
+
+    // darray
+    VkSemaphore* queue_complete_semaphores;
+
+    u32 in_flight_fence_count;
+    vulkan_fence* in_flight_fences;
+
+    // Holds pointers to fences which exist and are owned elsewhere.
+    vulkan_fence** images_in_flight;
 
     u32 image_index;
     u32 current_frame;

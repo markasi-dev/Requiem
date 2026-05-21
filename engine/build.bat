@@ -1,22 +1,28 @@
-REM Build script for engine
 @ECHO OFF
 SetLocal EnableDelayedExpansion
 
-REM Get a list of all the .c files
 SET cFilenames=
-FOR /R %%f in (*.c) do (
-    SET cFilenames=!cFilenames! %%f
-)
- ECHO "Files: %cFilenames%"
 
-REM echo "Files:" %cFilenames%
+REM Collect source files
+FOR /R src %%f in (*.c) do (
+    SET cFilenames=!cFilenames! "%%f"
+)
+
+REM Add glad explicitly
+SET cFilenames=!cFilenames! "..\vendor\glad\src\glad.c"
+
+ECHO Files: %cFilenames%
 
 SET assembly=engine
-SET compilerFlags=-g -shared -Wvarargs -Wall -Werror
-REM -Wall -Werror
-SET includeFlags=-Isrc -I%VULKAN_SDK%/Include
-SET linkerFlags=-luser32 -lvulkan-1 -L%VULKAN_SDK%/Lib
+
+SET compilerFlags=-g -shared -Wall -Werror
+SET includeFlags=-Isrc -I..\vendor\glad\include -I%VULKAN_SDK%\Include
+SET linkerFlags=-L%VULKAN_SDK%\Lib -lvulkan-1 -luser32
 SET defines=-D_DEBUG -DRQ_EXPORT -D_CRT_SECURE_NO_WARNINGS
 
-ECHO "Building %assembly%%..."
-clang %cFilenames% %compilerFlags% -o ../bin/%assembly%.dll %defines% %includeFlags% %linkerFlags%
+IF NOT EXIST ..\bin mkdir ..\bin
+
+ECHO Building %assembly%...
+
+clang %cFilenames% %compilerFlags% %defines% %includeFlags% ^
+-o ..\bin\%assembly%.dll %linkerFlags%

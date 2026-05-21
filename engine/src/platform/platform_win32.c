@@ -3,6 +3,7 @@
 // Windows platform layer.
 #if RQ_PLATFORM_WINDOWS 
 
+    #include "core/event.h"
     #include "core/logger.h"
     #include "core/input.h"
     #include "core/rq_string.h"
@@ -228,7 +229,9 @@
                 // Notify the OS that erasing will be handled by the application to prevent flicker.
                 return 1;
             case WM_CLOSE:
-                return 0;
+                event_context data = {};
+                event_fire(EVENT_CODE_APPLICATION_QUIT, 0, data);
+                return TRUE;
             case WM_DESTROY:
                 PostQuitMessage(0);
                 return 0;

@@ -84,14 +84,15 @@ b8 application_create(game* game_inst) {
 
 }
 b8 application_run() {
+    
+    RQ_INFO(get_memory_usage_string());
+
     clock_start(&app_state.clock);
     clock_update(&app_state.clock);
     app_state.last_time = app_state.clock.elapsed;
     f64 running_time = 0;
     u8 frame_count = 0;
     f64 target_frame_seconds = 1.0f / 60;
-
-    RQ_INFO(get_memory_usage_string());
 
     while (app_state.is_running) {
         if (!platform_pump_messages(&app_state.platform)) {
@@ -158,6 +159,11 @@ b8 application_run() {
     platform_shutdown(&app_state.platform);
 
     return TRUE;
+}
+
+void application_get_framebuffer_size(u32* width, u32* height) {
+    *width = app_state.width;
+    *height = app_state.height;
 }
 
 b8 application_on_event(u16 code, void* sender, void* listener_inst, event_context context) {

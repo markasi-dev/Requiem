@@ -1,0 +1,74 @@
+Date : 2026-05-21 19:36:11
+Directory : c:\Dev\Engine\Requiem\code\engine\src\renderer
+Total : 40 files,  -1090 codes, -161 comments, -271 blanks, all -1522 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| Shell Script |          1 |         -9 |         -2 |         -1 |        -12 |
+| Batch        |          1 |        -14 |         -4 |         -4 |        -22 |
+| C++          |         19 |       -318 |        -60 |        -91 |       -469 |
+| C            |         19 |       -749 |        -95 |       -175 |     -1,019 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                          | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                             |         40 |     -1,090 |       -161 |       -271 |     -1,522 |
+| ..                                                                            |         25 |     -1,911 |       -209 |       -456 |     -2,576 |
+| .. (Files)                                                                    |          3 |       -113 |        -29 |        -31 |       -173 |
+| ..\..                                                                         |          2 |        -23 |         -6 |         -5 |        -34 |
+| ..\containers                                                                 |          2 |       -145 |        -10 |        -40 |       -195 |
+| ..\core                                                                       |         15 |       -885 |        -94 |       -240 |     -1,219 |
+| ..\platform                                                                   |          3 |       -745 |        -70 |       -140 |       -955 |
+| vulkan                                                                        |         15 |        821 |         48 |        185 |      1,054 |
++-------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                                      | language     | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| c:\Dev\Engine\Requiem\code\engine\build.bat                                   | Batch        |        -14 |         -4 |         -4 |        -22 |
+| c:\Dev\Engine\Requiem\code\engine\build.sh                                    | Shell Script |         -9 |         -2 |         -1 |        -12 |
+| c:\Dev\Engine\Requiem\code\engine\src\containers\darray.c                     | C            |        -97 |         -3 |        -19 |       -119 |
+| c:\Dev\Engine\Requiem\code\engine\src\containers\darray.h                     | C++          |        -48 |         -7 |        -21 |        -76 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\application.c                      | C            |       -149 |        -12 |        -41 |       -202 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\application.h                      | C++          |        -12 |         -6 |         -9 |        -27 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\asserts.h                          | C++          |        -44 |         -4 |        -11 |        -59 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\clock.c                            | C            |        -14 |          0 |         -4 |        -18 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\clock.h                            | C++          |         -9 |         -3 |         -5 |        -17 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\event.c                            | C            |       -100 |        -14 |        -26 |       -140 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\event.h                            | C++          |        -34 |        -11 |        -20 |        -65 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\input.c                            | C            |       -157 |        -19 |        -33 |       -209 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\input.h                            | C++          |       -147 |         -3 |        -22 |       -172 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\logger.c                           | C            |        -33 |         -7 |        -14 |        -54 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\logger.h                           | C            |        -45 |        -11 |        -17 |        -73 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.c                        | C            |        -91 |         -3 |        -19 |       -113 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.h                        | C++          |        -30 |         -1 |        -10 |        -41 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.c                        | C            |        -15 |          0 |         -4 |        -19 |
+| c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.h                        | C++          |         -5 |          0 |         -5 |        -10 |
+| c:\Dev\Engine\Requiem\code\engine\src\defines.h                               | C++          |        -75 |        -11 |        -14 |       -100 |
+| c:\Dev\Engine\Requiem\code\engine\src\entry.h                                 | C++          |        -28 |         -8 |        -10 |        -46 |
+| c:\Dev\Engine\Requiem\code\engine\src\game_types.h                            | C++          |        -10 |        -10 |         -7 |        -27 |
+| c:\Dev\Engine\Requiem\code\engine\src\platform\platform.h                     | C++          |        -23 |          0 |         -8 |        -31 |
+| c:\Dev\Engine\Requiem\code\engine\src\platform\platform_linux_x11.c           | C            |       -498 |        -43 |        -79 |       -620 |
+| c:\Dev\Engine\Requiem\code\engine\src\platform\platform_win32.c               | C            |       -224 |        -27 |        -53 |       -304 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_backend.c        | C            |        192 |         14 |         39 |        245 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_command_buffer.c | C            |         82 |          3 |         19 |        104 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_command_buffer.h | C++          |         28 |          0 |          8 |         36 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_device.c         | C            |         34 |          2 |          5 |         41 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_device.h         | C++          |          1 |          0 |          1 |          2 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_fence.c          | C            |         66 |          1 |          8 |         75 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_fence.h          | C++          |          9 |          0 |          5 |         14 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_framebuffer.c    | C            |         40 |          2 |          7 |         49 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_framebuffer.h    | C++          |         11 |          0 |          3 |         14 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_image.c          | C            |         78 |          5 |         16 |         99 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_image.h          | C++          |         20 |          0 |          4 |         24 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_renderpass.c     | C            |        106 |         11 |         26 |        143 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_renderpass.h     | C++          |         15 |          0 |          5 |         20 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_swapchain.c      | C            |         76 |          6 |         14 |         96 |
+| c:\Dev\Engine\Requiem\code\engine\src\renderer\vulkan\vulkan_types.inl        | C++          |         63 |          4 |         25 |         92 |
+| Total                                                                         |              |     -1,090 |       -161 |       -271 |     -1,522 |
++-------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
