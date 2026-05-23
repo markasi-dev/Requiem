@@ -132,9 +132,9 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
 #if defined(_DEBUG)
     RQ_DEBUG("Creating Vulkan debugger...");
     u32 log_severity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;/* |
+                       VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT |
-                      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;*/
+                      VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT;
     
     VkDebugUtilsMessengerCreateInfoEXT debug_create_info = {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
     debug_create_info.messageSeverity = log_severity;
@@ -177,7 +177,6 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
         0.0f, 0.0f, 0.2f, 1.0f,
         1.0f,
         0);
-    
 
     context.swapchain.framebuffers = darray_reserve(vulkan_framebuffer, context.swapchain.image_count);
     regenerate_framebuffers(backend, &context.swapchain, &context.main_renderpass);
@@ -248,20 +247,19 @@ void vulkan_renderer_backend_shutdown(renderer_backend* backend) {
     // Sync objects
     for (u8 i = 0; i < context.swapchain.max_frames_in_flight; ++i) {
         if (context.image_available_semaphores[i]) {
-            vkDestroySemaphore(
-                context.device.logical_device,
-                context.image_available_semaphores[i],
-                context.allocator);
+            vkDestroySemaphore(context.device.logical_device,
+                context.image_available_semaphores[i], context.allocator);
             context.image_available_semaphores[i] = 0;
         }
+        vulkan_fence_destroy(&context, &context.in_flight_fences[i]);
+    }
+
+    for (u32 i = 0; i < context.swapchain.image_count; ++i) {
         if (context.queue_complete_semaphores[i]) {
-            vkDestroySemaphore(
-                context.device.logical_device,
-                context.queue_complete_semaphores[i],
-                context.allocator);
+            vkDestroySemaphore(context.device.logical_device,
+                context.queue_complete_semaphores[i], context.allocator);
             context.queue_complete_semaphores[i] = 0;
         }
-        vulkan_fence_destroy(&context, &context.in_flight_fences[i]);
     }
     darray_destroy(context.image_available_semaphores);
     context.image_available_semaphores = 0;
@@ -330,6 +328,9 @@ void vulkan_renderer_backend_on_resize(renderer_backend* backend, u16 width, u16
     RQ_INFO("Vulkan renderer backend->resized: w/h/gen = %i/%i/%llu", width, height, context.framebuffer_size_generation);
 }
 b8 vulkan_renderer_backend_begin_frame(renderer_backend* backend, f32 delta_time) {
+
+
+
     vulkan_device* device = &context.device;
 
     // If the swapchain is currently being recreated, wait for the device
@@ -538,7 +539,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vk_debug_callback(
             RQ_ERROR(callback_data->pMessage);
             break;
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-            RQ_ERROR(callback_data->pMessage);
+            RQ_WARN(callback_data->pMessage);
             break;
         case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
             RQ_INFO(callback_data->pMessage);
@@ -560,7 +561,7 @@ i32 find_memory_index(u32 type_filter, u32 property_flags) {
     for (u32 i = 0; i < memory_properties.memoryTypeCount; ++i) {
         // Check each memory type to see if its bit is set to 1.
         if (type_filter & (1 << i) && (memory_properties.memoryTypes[i].propertyFlags & property_flags) == property_flags) {
-            return 1;
+            return i;
         }
     }
 
@@ -609,20 +610,22 @@ void regenerate_framebuffers(renderer_backend* backend, vulkan_swapchain* swapch
             &context.swapchain.framebuffers[i]);
     }
 }
-
 b8 recreate_swapchain(renderer_backend* backend) {
     if (context.recreating_swapchain) {
-        RQ_DEBUG("recreating_swapchain called when already recreating. Booting");
+        RQ_DEBUG("recreate_swapchain called when already recreating. Booting");
         return FALSE;
     }
 
-    if (context.framebuffer_width == 0 || context.framebuffer_height == 0) {
+    // Use cached size if available, otherwise keep current size.
+    u32 new_width  = (cached_framebuffer_width  != 0) ? cached_framebuffer_width  : context.framebuffer_width;
+    u32 new_height = (cached_framebuffer_height != 0) ? cached_framebuffer_height : context.framebuffer_height;
+
+    if (new_width == 0 || new_height == 0) {
         RQ_DEBUG("recreate_swapchain called when window is < 1 in a dimension. Booting");
         return FALSE;
     }
 
     context.recreating_swapchain = TRUE;
-
     vkDeviceWaitIdle(context.device.logical_device);
 
     for (u32 i = 0; i < context.swapchain.image_count; ++i) {
@@ -635,39 +638,30 @@ b8 recreate_swapchain(renderer_backend* backend) {
         &context.device.swapchain_support);
     vulkan_device_detect_depth_format(&context.device);
 
-    vulkan_swapchain_recreate(
-        &context,
-        cached_framebuffer_width,
-        cached_framebuffer_height,
-        &context.swapchain);
-    
-    context.framebuffer_width = cached_framebuffer_width;
-    context.framebuffer_height = cached_framebuffer_height;
-    context.main_renderpass.x = cached_framebuffer_width;
-    context.main_renderpass.y = cached_framebuffer_height;
-    cached_framebuffer_width = 0;
-    cached_framebuffer_height = 0;
+    vulkan_swapchain_recreate(&context, new_width, new_height, &context.swapchain);
+
+    context.framebuffer_width  = new_width;
+    context.framebuffer_height = new_height;
+    cached_framebuffer_width   = 0;
+    cached_framebuffer_height  = 0;
 
     context.framebuffer_size_last_generation = context.framebuffer_size_generation;
 
     for (u32 i = 0; i < context.swapchain.image_count; ++i) {
         vulkan_command_buffer_free(&context, context.device.graphics_command_pool, &context.graphics_command_buffers[i]);
     }
-
     for (u32 i = 0; i < context.swapchain.image_count; ++i) {
         vulkan_framebuffer_destroy(&context, &context.swapchain.framebuffers[i]);
     }
 
     context.main_renderpass.x = 0;
     context.main_renderpass.y = 0;
-    context.main_renderpass.w = context.framebuffer_width;
-    context.main_renderpass.h = context.framebuffer_height;
+    context.main_renderpass.w = new_width;
+    context.main_renderpass.h = new_height;
 
     regenerate_framebuffers(backend, &context.swapchain, &context.main_renderpass);
-
     create_command_buffers(backend);
 
     context.recreating_swapchain = FALSE;
-
     return TRUE;
 }

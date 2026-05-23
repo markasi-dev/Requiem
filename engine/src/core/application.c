@@ -54,6 +54,9 @@ b8 application_create(game* game_inst) {
     event_register(EVENT_CODE_KEY_PRESSED, 0, application_on_key);
     event_register(EVENT_CODE_KEY_RELEASED, 0, application_on_key);
 
+    app_state.width  = game_inst->app_config.start_width;
+    app_state.height = game_inst->app_config.start_height;
+
     if (!platform_startup(
             &app_state.platform, 
             game_inst->app_config.start_pos_x, 
@@ -76,7 +79,7 @@ b8 application_create(game* game_inst) {
         return FALSE;
     }
 
-    app_state.game_inst->on_resize(app_state.game_inst, app_state.width, app_state.height);
+    
 
     initialized = TRUE;
 
@@ -162,7 +165,7 @@ b8 application_run() {
 }
 
 void application_get_framebuffer_size(u32* width, u32* height) {
-    *width = app_state.width;
+    *width  = app_state.width;
     *height = app_state.height;
 }
 

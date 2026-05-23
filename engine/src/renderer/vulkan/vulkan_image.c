@@ -27,7 +27,7 @@ void vulkan_image_create(
     image_create_info.extent.width = width;
     image_create_info.extent.height = height;
     image_create_info.extent.depth = 1;
-    image_create_info.mipLevels = 4; // TODO: Support mipmapping
+    image_create_info.mipLevels = 1; // TODO: Support mipmapping
     image_create_info.arrayLayers = 1;
     image_create_info.format = format;
     image_create_info.tiling = tiling;

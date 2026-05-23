@@ -187,7 +187,7 @@ void vulkan_device_destroy(vulkan_context* context) {
 
 b8 vulkan_device_detect_depth_format(vulkan_device* device) {
     // Format conditions
-    const u64 candidate_count = 2;
+    const u64 candidate_count = 3;
     VkFormat candidates[3] = {
         VK_FORMAT_D32_SFLOAT,
         VK_FORMAT_D32_SFLOAT_S8_UINT,
