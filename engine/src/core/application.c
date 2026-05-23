@@ -29,6 +29,7 @@ static application_state app_state;
 // Event handlers
 b8 application_on_event(u16 code, void* sender, void* listener_inst, event_context context);
 b8 application_on_key(u16 code, void* sender, void* listener_inst, event_context context);
+b8 application_on_resized(u16 code, void* sender, void* listener_inst, event_context context);
 
 b8 application_create(game* game_inst) {
     if (initialized) {
@@ -53,6 +54,7 @@ b8 application_create(game* game_inst) {
     event_register(EVENT_CODE_APPLICATION_QUIT, 0, application_on_event);
     event_register(EVENT_CODE_KEY_PRESSED, 0, application_on_key);
     event_register(EVENT_CODE_KEY_RELEASED, 0, application_on_key);
+    event_register(EVENT_CODE_RESIZED, 0, application_on_resized);
 
     app_state.width  = game_inst->app_config.start_width;
     app_state.height = game_inst->app_config.start_height;
@@ -206,5 +208,33 @@ b8 application_on_key(u16 code, void* sender, void* listener_inst, event_context
         }
     }
 
+    return FALSE;
+}
+
+b8 application_on_resized(u16 code, void* sender, void* listener_inst, event_context context) {
+    if (code == EVENT_CODE_RESIZED) {
+        u16 width = context.data.u16[0];
+        u16 height = context.data.u16[1];
+
+        if (width != app_state.width || height != app_state.height) {
+            app_state.width = width;
+            app_state.height = height;
+
+            RQ_DEBUG("Window resize: %i, %i", width, height);
+
+            if (width == 0|| height == 0) {
+                RQ_INFO("Window minimized, suspending application...");
+                app_state.is_suspended = TRUE;
+                return TRUE;
+            } else {
+                if (app_state.is_suspended) {
+                    RQ_INFO("Window restored, resuming application...");
+                    app_state.is_suspended = FALSE;
+                }
+                app_state.game_inst->on_resize(app_state.game_inst, width, height);
+                renderer_on_resized(width, height);
+            }
+        }    
+    }
     return FALSE;
 }
