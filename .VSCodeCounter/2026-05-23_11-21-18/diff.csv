@@ -1,0 +1,32 @@
+"filename", "language", "Shell Script", "C++", "Batch", "C", "comment", "blank", "total"
+"c:\Dev\Engine\Requiem\code\engine\build.bat", "Batch", 0, 0, 17, 0, 2, 9, 28
+"c:\Dev\Engine\Requiem\code\engine\build.sh", "Shell Script", 9, 0, 0, 0, 2, 1, 12
+"c:\Dev\Engine\Requiem\code\engine\src\containers\darray.c", "C", 0, 0, 0, 97, 3, 19, 119
+"c:\Dev\Engine\Requiem\code\engine\src\containers\darray.h", "C++", 0, 48, 0, 0, 7, 21, 76
+"c:\Dev\Engine\Requiem\code\engine\src\core\application.c", "C", 0, 0, 0, 180, 11, 49, 240
+"c:\Dev\Engine\Requiem\code\engine\src\core\application.h", "C++", 0, 13, 0, 0, 6, 9, 28
+"c:\Dev\Engine\Requiem\code\engine\src\core\asserts.h", "C++", 0, 44, 0, 0, 4, 11, 59
+"c:\Dev\Engine\Requiem\code\engine\src\core\clock.c", "C", 0, 0, 0, 14, 0, 4, 18
+"c:\Dev\Engine\Requiem\code\engine\src\core\clock.h", "C++", 0, 9, 0, 0, 3, 5, 17
+"c:\Dev\Engine\Requiem\code\engine\src\core\event.c", "C", 0, 0, 0, 100, 14, 26, 140
+"c:\Dev\Engine\Requiem\code\engine\src\core\event.h", "C++", 0, 34, 0, 0, 11, 20, 65
+"c:\Dev\Engine\Requiem\code\engine\src\core\input.c", "C", 0, 0, 0, 157, 19, 33, 209
+"c:\Dev\Engine\Requiem\code\engine\src\core\input.h", "C++", 0, 147, 0, 0, 3, 22, 172
+"c:\Dev\Engine\Requiem\code\engine\src\core\logger.c", "C", 0, 0, 0, 33, 7, 14, 54
+"c:\Dev\Engine\Requiem\code\engine\src\core\logger.h", "C", 0, 0, 0, 45, 11, 17, 73
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.c", "C", 0, 0, 0, 91, 3, 19, 113
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_memory.h", "C++", 0, 30, 0, 0, 1, 10, 41
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.c", "C", 0, 0, 0, 15, 0, 4, 19
+"c:\Dev\Engine\Requiem\code\engine\src\core\rq_string.h", "C++", 0, 5, 0, 0, 0, 5, 10
+"c:\Dev\Engine\Requiem\code\engine\src\defines.h", "C++", 0, 75, 0, 0, 11, 14, 100
+"c:\Dev\Engine\Requiem\code\engine\src\entry.h", "C++", 0, 28, 0, 0, 8, 10, 46
+"c:\Dev\Engine\Requiem\code\engine\src\game_types.h", "C++", 0, 10, 0, 0, 10, 7, 27
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform.h", "C++", 0, 23, 0, 0, 0, 8, 31
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform_linux_x11.c", "C", 0, 0, 0, 503, 42, 80, 625
+"c:\Dev\Engine\Requiem\code\engine\src\platform\platform_win32.c", "C", 0, 0, 0, 235, 22, 53, 310
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer.backend.c", "C", 0, 0, 0, 21, 0, 6, 27
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_backend.h", "C++", 0, 5, 0, 0, 0, 3, 8
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_frontend.c", "C", 0, 0, 0, 43, 3, 14, 60
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_frontend.h", "C++", 0, 8, 0, 0, 0, 5, 13
+"c:\Dev\Engine\Requiem\code\engine\src\renderer\renderer_types.inl", "C++", 0, 19, 0, 0, 1, 9, 29
+"Total", "-", 9, 498, 17, 1534, 204, 507, 2769

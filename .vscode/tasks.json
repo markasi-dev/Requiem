@@ -51,16 +51,15 @@
                 "$gcc"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         },
         {
             "type": "shell",
             "label": "Clean Everything",
-            "command": "${workspaceFolder}/clean.sh",
+            "command": "${workspaceFolder}/clean-all.sh",
             "windows": {
-                "command": "${workspaceFolder}\\clean.bat"
+                "command": "${workspaceFolder}\\clean-all.bat"
             },
             "options": {
                 "cwd": "${workspaceFolder}"

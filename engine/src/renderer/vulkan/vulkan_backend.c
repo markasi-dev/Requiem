@@ -174,7 +174,7 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
         &context,
         &context.main_renderpass,
         0, 0, context.framebuffer_width, context.framebuffer_height,
-        0.0f, 0.0f, 0.2f, 1.0f,
+        0.2f, 0.2f, 0.2f, 1.0f,
         1.0f,
         0);
 
