@@ -644,7 +644,7 @@ b8 recreate_swapchain(renderer_backend* backend) {
     context.framebuffer_height = new_height;
     cached_framebuffer_width   = 0;
     cached_framebuffer_height  = 0;
-
+    
     context.framebuffer_size_last_generation = context.framebuffer_size_generation;
 
     for (u32 i = 0; i < context.swapchain.image_count; ++i) {
