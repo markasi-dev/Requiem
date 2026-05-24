@@ -186,35 +186,35 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
 
     // Create sync objects
 
-// Per-frame sync objects
-context.image_available_semaphores =
-    darray_reserve(VkSemaphore, context.swapchain.max_frames_in_flight);
+    // Per-frame sync objects
+    context.image_available_semaphores =
+        darray_reserve(VkSemaphore, context.swapchain.max_frames_in_flight);
 
-context.in_flight_fences =
-    darray_reserve(vulkan_fence, context.swapchain.max_frames_in_flight);
+    context.in_flight_fences =
+        darray_reserve(vulkan_fence, context.swapchain.max_frames_in_flight);
 
-// Per-image sync objects
-context.queue_complete_semaphores =
-    darray_reserve(VkSemaphore, context.swapchain.image_count);
+    // Per-image sync objects
+    context.queue_complete_semaphores =
+        darray_reserve(VkSemaphore, context.swapchain.image_count);
 
-// Create per-frame sync objects
-for (u32 i = 0; i < context.swapchain.max_frames_in_flight; ++i) {
+    // Create per-frame sync objects
+    for (u32 i = 0; i < context.swapchain.max_frames_in_flight; ++i) {
 
-    VkSemaphoreCreateInfo semaphore_create_info = {
-        VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
-    };
+        VkSemaphoreCreateInfo semaphore_create_info = {
+            VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+        };
 
-    vkCreateSemaphore(
-        context.device.logical_device,
-        &semaphore_create_info,
-        context.allocator,
-        &context.image_available_semaphores[i]);
+        vkCreateSemaphore(
+            context.device.logical_device,
+            &semaphore_create_info,
+            context.allocator,
+            &context.image_available_semaphores[i]);
 
-    vulkan_fence_create(
-        &context,
-        TRUE,
-        &context.in_flight_fences[i]);
-}
+        vulkan_fence_create(
+            &context,
+            TRUE,
+            &context.in_flight_fences[i]);
+    }
 
     // Create per-image render-finished semaphores
     for (u32 i = 0; i < context.swapchain.image_count; ++i) {

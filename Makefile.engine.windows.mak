@@ -5,14 +5,20 @@ OBJ_DIR := obj
 ASSEMBLY := engine
 EXTENSION := .dll
 COMPILER_FLAGS := -g -fdeclspec # -fPIC
-INCLUDE_FLAGS := -Iengine\src -I$(VULKAN_SDK)\include
+INCLUDE_FLAGS := -Iengine\src \
+				 -I$(VULKAN_SDK)\include \
+				 -Ivendor\glad\include
+
 LINKER_FLAGS := -g -shared -luser32 -lvulkan-1 -L$(VULKAN_SDK)\Lib -L$(OBJ_DIR)\engine
 DEFINES := -D_DEBUG -DRQ_EXPORT -D_CRT_SECURE_NO_WARNINGS
+
+VENDOR_SRC := \
+	vendor/glad/src/glad.c
 
 # Make does not offer a recursive wildcard function, so here's one:
 rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
-SRC_FILES := $(call rwildcard,$(ASSEMBLY)/,*.c) # Get all .c files.
+SRC_FILES := $(call rwildcard,$(ASSEMBLY)/,*.c) $(VENDOR_SRC) # Get all .c files.
 DIRECTORIES := $(ASSEMBLY)\src $(subst $(DIR),,$(shell dir $(ASSEMBLY)\src /S /AD /B | findstr /i src))
 OBJ_FILES := $(SRC_FILES:%=$(OBJ_DIR)/%.o) # Get all compiled .c.o objects for engine
 

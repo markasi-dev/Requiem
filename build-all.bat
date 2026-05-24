@@ -22,7 +22,7 @@ ECHO "Building everything..."
 @REM IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
 ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-ECHO "                   BUILDING ENGINE                       "
+ECHO "                  BUILDING TESTBED                      "
 ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
 REM Engine

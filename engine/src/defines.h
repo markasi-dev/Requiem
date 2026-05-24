@@ -52,7 +52,7 @@ STATIC_ASSERT(sizeof(b8) == 1, "b8 must be 8-bit for binary compatability.");
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
     #define RQ_PLATFORM_WINDOWS 1
     #ifndef _WIN64
-        #error "64-bit is required on Windows... How do you not have it Markas?"
+        #error "64-bit is required on Windows."
     #endif
 #elif defined(__linux__) || defined(__gnu_linux__)
     // Linux OS
@@ -77,24 +77,30 @@ STATIC_ASSERT(sizeof(b8) == 1, "b8 must be 8-bit for binary compatability.");
         #error "unknown Apple platform"
     #endif
 #else
-    #error "Markas... Oh Markas... Why are you on a platform I can't fucking recognize?!"
+    #error "NO PLATFORM HAS BEEN RECOGNIZED! YOU CANNOT USE REQUIEM ENGINE. KILLING..."
 #endif
 
 #ifdef RQ_EXPORT
-    #ifdef _WIN32
+    #ifdef _MSC_VER
         #define RAPI __declspec(dllexport)
     #else
         #define RAPI __attribute__((visibility("default")))
     #endif
-#elif defined(RQ_IMPORT)
-    #ifdef _WIN32
+#else
+    #ifdef _MSC_VER
         #define RAPI __declspec(dllimport)
     #else
         #define RAPI
     #endif
-#else
-    #define RAPI
 #endif
 
 #define RQ_CLAMP(value, min, max) (value <= min) ? min : (value >= max) ? max \
                                                                         : value;
+
+#ifdef _MSC_VER
+#define RQ_INLINE __forceinline
+#define RQ_N0INLINE __declspec(noinline)
+#else
+#define RQ_INLINE static inline
+#define RQ_N0INLINE
+#endif
