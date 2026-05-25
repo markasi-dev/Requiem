@@ -4,38 +4,36 @@
 #include "math_types.h"
 #include "core/rq_memory.h"
 
-#define PI 3.14159265358979323846f
-#define PI_2 2.0f * PI
-#define HALF_PI 0.5f * PI
-#define QUARTER_PI 0.25f * PI
-#define ONE_OVER_PI 1.0f / PI
-#define ONE_OVER_TWO_PI 1.0F / PI_2
-#define SQRT_2 1.41421356237309504880f
-#define SQRT_3 1.73205080756887729352f
-#define SQRT_ONE_OVER_TWO 0.70710678118654752440f
-#define SQRT_ONE_OVER_THREE 0.57735016918962576450f
-#define DEG2RAD_MULTIPLIER PI / 180.0f
-#define RAD2DEG_MULTIPLIER 180.0f / PI
+#define RQ_PI 3.14159265358979323846f
+#define RQ_PI_2 (2.0f * RQ_PI)
+#define RQ_HALF_PI (0.5f * RQ_PI)
+#define RQ_QUARTER_PI (0.25f * RQ_PI)
 
-#define SEC_TO_MS_MULTIPLIER 1000.0f
+#define RQ_ONE_OVER_PI (1.0f / RQ_PI)
+#define RQ_ONE_OVER_TWO_PI (1.0f / RQ_PI_2)
 
-#define MS_TO_SEC_MULTIPLIER 0.001f
+#define RQ_DEG2RAD_MULTIPLIER (RQ_PI / 180.0f)
+#define RQ_RAD2DEG_MULTIPLIER (180.0f / RQ_PI)
+
+#define RQ_SEC_TO_MS_MULTIPLIER 1000.0f
+
+#define RQ_MS_TO_SEC_MULTIPLIER 0.001f
 
 // Just a big fucking number
 #define RQ_INFINITY 1e30f
 
 // Just the smallest positive fucking number where 1.0 + FLOAT_EPSILON != 0
-#define FLOAT_EPSILON 1.192092896e-07f
+#define RQ_FLOAT_EPSILON 1.192092896e-07f
 
 //------------------------------------
 // GENERAL MATH FUNCTIOINS
 //------------------------------------
-RAPI f32 sin(f32 x);
-RAPI f32 cos(f32 x);
-RAPI f32 tan(f32 x);
-RAPI f32 acos(f32 x);
-RAPI f32 sqrt(f32 x);
-RAPI f32 abs(f32 x);
+RAPI f32 rq_sin(f32 x);
+RAPI f32 rq_cos(f32 x);
+RAPI f32 rq_tan(f32 x);
+RAPI f32 rq_acos(f32 x);
+RAPI f32 rq_sqrt(f32 x);
+RAPI f32 rq_abs(f32 x);
 
 RQ_INLINE b8 is_power_of_2(u64 value) {
     return (value != 0) && ((value & (value - 1)) == 0);
@@ -111,7 +109,7 @@ RQ_INLINE f32 vec2_length_squared(vec2 vector) {
 }
 
 RQ_INLINE f32 vec2_length(vec2 vector) {
-    return sqrt(vec2_length_squared(vector));
+    return rq_sqrt(vec2_length_squared(vector));
 }
 
 RQ_INLINE void vec2_normalize(vec2* vector) {
@@ -129,11 +127,11 @@ RQ_INLINE vec2 vec2_normalized(vec2 vector) {
 }
 
 RQ_INLINE b8 vec2_compare(vec2 a, vec2 b, f32 tolerance) {
-    if (abs(a.x - b.x) > tolerance) {
+    if (rq_abs(a.x - b.x) > tolerance) {
         return FALSE;
     }
 
-    if (abs(a.y - b.y) > tolerance) {
+    if (rq_abs(a.y - b.y) > tolerance) {
         return FALSE;
     }
 
@@ -237,7 +235,7 @@ RQ_INLINE f32 vec3_length_squared(vec3 vector) {
 }
 
 RQ_INLINE f32 vec3_length(vec3 vector) {
-    return sqrt(vec3_length_squared(vector));
+    return rq_sqrt(vec3_length_squared(vector));
 }
 
 RQ_INLINE void vec3_normalize(vec3* vector) {
@@ -271,15 +269,15 @@ RQ_INLINE vec3 vec3_cross(vec3 a, vec3 b) {
 }
 
 RQ_INLINE b8 vec3_compare(vec3 a, vec3 b, f32 tolerance) {
-    if (abs(a.x - b.x) > tolerance) {
+    if (rq_abs(a.x - b.x) > tolerance) {
         return FALSE;
     }
 
-    if (abs(a.y - b.y) > tolerance) {
+    if (rq_abs(a.y - b.y) > tolerance) {
         return FALSE;
     }
 
-    if (abs(a.z - b.z) > tolerance) {
+    if (rq_abs(a.z - b.z) > tolerance) {
         return FALSE;
     }
 
@@ -369,7 +367,7 @@ RQ_INLINE f32 vec4_length_squared(vec4 vector) {
 } 
 
 RQ_INLINE f32 vec4_length(vec4 vector) {
-    return sqrt(vec4_length_squared(vector));
+    return rq_sqrt(vec4_length_squared(vector));
 }
 
 RQ_INLINE void vec4_normalize(vec4* vector) {
@@ -438,25 +436,37 @@ RQ_INLINE mat4 mat4_orthographic(f32 left, f32 right, f32 bottom, f32 top, f32 n
     f32 bt = 1.0f / (bottom - top);
     f32 nf = 1.0f / (near_clip - far_clip);
 
-    out_matrix[0] = -2.0f * lr;
-    out_matrix[5] = -2.0f * bt;
-    out_matrix[10] = 2.0f * nf;
-
-    out_matrix[12] = (left + right) * lr;
-    out_matrix[13] = (top + bottom) * bt;
-    out_matrix[14] = (far_clip + near_clip) * nf;
+    out_matrix.data[0] = -2.0f * lr;
+    out_matrix.data[5] = -2.0f * bt;
+    out_matrix.data[10] = 2.0f * nf;
+    
+    out_matrix.data[12] = (left + right) * lr;
+    out_matrix.data[13] = (top + bottom) * bt;
+    out_matrix.data[14] = (far_clip + near_clip) * nf;
     return out_matrix;
 }
 
-RQ_INLINE mat4 mat4_perspective(f32 fov_radians, f32 aspect_ratio, f32 near_clip, f32 far_clip) {
-    f32 half_tan_fov = tan(fov_radians * 0.5f);
+RQ_INLINE mat4 mat4_perspective(
+    f32 fov_radians,
+    f32 aspect_ratio,
+    f32 near_clip,
+    f32 far_clip) {
+
+    f32 half_tan_fov = rq_tan(fov_radians * 0.5f);
+
     mat4 out_matrix;
     rq_zero_memory(out_matrix.data, sizeof(f32) * 16);
+
     out_matrix.data[0] = 1.0f / (aspect_ratio * half_tan_fov);
     out_matrix.data[5] = 1.0f / half_tan_fov;
-    out_matrix.data[10] = -((far_clip * near_clip) / (far_clip - near_clip));
+
+    out_matrix.data[10] = -(far_clip + near_clip) / (far_clip - near_clip);
     out_matrix.data[11] = -1.0f;
-    out_matrix.data[14] = -((2.0f * far_clip * near_clip) / (far_clip - near_clip));
+
+    out_matrix.data[14] =
+        -(2.0f * far_clip * near_clip) /
+        (far_clip - near_clip);
+
     return out_matrix;
 }
 
@@ -588,8 +598,8 @@ RQ_INLINE mat4 mat4_scale(vec3 scale) {
 
 RQ_INLINE mat4 mat4_euler_x(f32 angle_radians) {
     mat4 out_matrix = mat4_identity();
-    f32 c = cos(angle_radians);
-    f32 s = sin(angle_radians);
+    f32 c = rq_cos(angle_radians);
+    f32 s = rq_sin(angle_radians);
 
     out_matrix.data[5] = c;
     out_matrix.data[6] = s;
@@ -600,8 +610,8 @@ RQ_INLINE mat4 mat4_euler_x(f32 angle_radians) {
 
 RQ_INLINE mat4 mat4_euler_y(f32 angle_radians) {
     mat4 out_matrix = mat4_identity();
-    f32 c = cos(angle_radians);
-    f32 s = sin(angle_radians);
+    f32 c = rq_cos(angle_radians);
+    f32 s = rq_sin(angle_radians);
 
     out_matrix.data[0] = c;
     out_matrix.data[2] = -s;
@@ -612,8 +622,8 @@ RQ_INLINE mat4 mat4_euler_y(f32 angle_radians) {
 
 RQ_INLINE mat4 mat4_euler_z(f32 angle_radians) {
     mat4 out_matrix = mat4_identity();
-    f32 c = cos(angle_radians);
-    f32 s = sin(angle_radians);
+    f32 c = rq_cos(angle_radians);
+    f32 s = rq_sin(angle_radians);
 
     out_matrix.data[0] = c;
     out_matrix.data[1] = s;
@@ -631,3 +641,220 @@ RQ_INLINE mat4 mat4_euler_xyz(f32 x_radians, f32 y_radians, f32 z_radians) {
     return out_matrix;
 }
 
+RQ_INLINE vec3 mat4_forward(mat4 matrix) {
+    vec3 forward;
+    forward.x = -matrix.data[2];
+    forward.y = -matrix.data[6];
+    forward.z = -matrix.data[10];
+    vec3_normalize(&forward);
+    return forward;
+}
+
+RQ_INLINE vec3 mat4_backward(mat4 matrix) {
+    vec3 backward;
+    backward.x = matrix.data[2];
+    backward.y = matrix.data[6];
+    backward.z = matrix.data[10];
+    vec3_normalize(&backward);
+    return backward;
+}
+
+
+RQ_INLINE vec3 mat4_up(mat4 matrix) {
+    vec3 up;
+    up.x = matrix.data[1];
+    up.y = matrix.data[5];
+    up.z = matrix.data[9];
+    vec3_normalize(&up);
+    return up;
+}
+
+RQ_INLINE vec3 mat4_down(mat4 matrix) {
+    vec3 down;
+    down.x = -matrix.data[1];
+    down.y = -matrix.data[5];
+    down.z = -matrix.data[9];
+    vec3_normalize(&down);
+    return down;
+}
+
+RQ_INLINE vec3 mat4_left(mat4 matrix) {
+    vec3 right;
+    right.x = -matrix.data[0];
+    right.y = -matrix.data[4];
+    right.z = -matrix.data[8];
+    vec3_normalize(&right);
+    return right;
+}
+
+RQ_INLINE vec3 mat4_right(mat4 matrix) {
+    vec3 left;
+    left.x = matrix.data[0];
+    left.y = matrix.data[4];
+    left.z = matrix.data[8];
+    vec3_normalize(&left);
+    return left;
+}
+
+//------------------------------------
+// QUATERNIONS
+//------------------------------------
+
+RQ_INLINE quat quat_identity() {
+    return (quat){0, 0, 0, 1.0f};
+}
+
+RQ_INLINE f32 quat_normal(quat q) {
+    return rq_sqrt(
+        q.x * q.x + 
+        q.y * q.y +
+        q.z * q.z +
+        q.w * q.w);
+}
+
+RQ_INLINE quat quat_normalize(quat q) {
+    f32 normal = quat_normal(q);
+    return (quat){
+        q.x / normal,
+        q.y / normal,
+        q.z / normal,
+        q.w / normal};
+}
+
+RQ_INLINE quat quat_conjugate(quat q) {
+    return (quat) {
+        -q.x,
+        -q.y,
+        -q.z,
+         q.w};
+}
+
+RQ_INLINE quat quat_inverse(quat q) {
+    return quat_normalize(quat_conjugate(q));
+}
+
+RQ_INLINE quat quat_mul(quat a, quat b) {
+    quat out_quaternion;
+
+    out_quaternion.x = a.x * b.w +
+                       a.y * b.z -
+                       a.z * b.y +
+                       a.w * b.x;
+
+    out_quaternion.y = -a.x * b.z +
+                       a.y * b.w +
+                       a.z * b.x +
+                       a.w * b.y;
+
+    out_quaternion.z = a.x * b.y -
+                       a.y * b.x +
+                       a.z * b.w +
+                       a.w * b.z;
+
+    out_quaternion.w = -a.x * b.x -
+                       a.y * b.y -
+                       a.z * b.z +
+                       a.w * b.w;
+
+    return out_quaternion;
+}
+
+RQ_INLINE f32 quat_dot(quat a, quat b) {
+    return a.x * b.x +
+           a.y * b.y +
+           a.z * b.z +
+           a.w * b.w;
+}
+
+RQ_INLINE mat4 quat_to_mat4(quat q) {
+    mat4 out_matrix = mat4_identity();
+
+    quat n = quat_normalize(q);
+
+    out_matrix.data[0] = 1.0f - 2.0f * n.y * n.y - 2.0f * n.z * n.z;
+    out_matrix.data[1] = 2.0f * n.x * n.y - 2.0f * n.z * n.w;
+    out_matrix.data[2] = 2.0f * n.x * n.z + 2.0f * n.y * n.w;
+
+    out_matrix.data[4] = 2.0f * n.x * n.y + 2.0f * n.z * n.w;
+    out_matrix.data[5] = 1.0f - 2.0f * n.x * n.x - 2.0f * n.z * n.z;
+    out_matrix.data[6] = 2.0f * n.y * n.z - 2.0f * n.x * n.w;
+
+    out_matrix.data[8] = 2.0f * n.x * n.z - 2.0f * n.y * n.w;
+    out_matrix.data[9] = 2.0f * n.y * n.z + 2.0f * n.x * n.w;
+    out_matrix.data[10] = 1.0f - 2.0f * n.x * n.x - 2.0f * n.y * n.y;
+
+    return out_matrix;
+}
+
+
+RQ_INLINE quat quat_from_axis_angle(vec3 axis, f32 angle, b8 normalize) {
+    const f32 half_angle = 0.5f * angle;
+    f32 s = rq_sin(half_angle);
+    f32 c = rq_cos(half_angle);
+
+    quat q = (quat){s * axis.x, s * axis.y, s * axis.z, c};
+    if (normalize) {
+        return quat_normalize(q);
+    }
+    return q;
+}
+
+RQ_INLINE quat quat_slerp(quat q_0, quat q_1, f32 percentage) {
+    quat out_quaternion;
+    // Only unit quaternions are valid rotations.
+    // Normalize to avoid undefined behavior.
+    quat v0 = quat_normalize(q_0);
+    quat v1 = quat_normalize(q_1);
+
+    // Compute the cosine of the angle between the two vectors.
+    f32 dot = quat_dot(v0, v1);
+
+    // If the dot product is negative, slerp won't take
+    // the shorter path. Note that v1 and -v1 are equivalent when
+    // the negation is applied to all four components. Fix by
+    // reversing one quaternion.
+    if (dot < 0.0f) {
+        v1.x = -v1.x;
+        v1.y = -v1.y;
+        v1.z = -v1.z;
+        v1.w = -v1.w;
+        dot = -dot;
+    }
+
+    const f32 DOT_THRESHOLD = 0.9995f;
+    if (dot > DOT_THRESHOLD) {
+        // If the inputs are too close for comfort, linearly interpolate
+        // and normalize the result.
+        out_quaternion = (quat){
+            v0.x + ((v1.x - v0.x) * percentage),
+            v0.y + ((v1.y - v0.y) * percentage),
+            v0.z + ((v1.z - v0.z) * percentage),
+            v0.w + ((v1.w - v0.w) * percentage)};
+
+        return quat_normalize(out_quaternion);
+    }
+
+    // Since dot is in range [0, DOT_THRESHOLD], acos is safe
+    f32 theta_0 = rq_acos(dot);          // theta_0 = angle between input vectors
+    f32 theta = theta_0 * percentage;  // theta = angle between v0 and result
+    f32 sin_theta = rq_sin(theta);       // compute this value only once
+    f32 sin_theta_0 = rq_sin(theta_0);   // compute this value only once
+
+    f32 s0 = rq_cos(theta) - dot * sin_theta / sin_theta_0;  // == sin(theta_0 - theta) / sin(theta_0)
+    f32 s1 = sin_theta / sin_theta_0;
+
+    return (quat){
+        (v0.x * s0) + (v1.x * s1),
+        (v0.y * s0) + (v1.y * s1),
+        (v0.z * s0) + (v1.z * s1),
+        (v0.w * s0) + (v1.w * s1)};
+}
+
+
+RQ_INLINE f32 deg_to_rad(f32 degrees) {
+    return degrees * RQ_DEG2RAD_MULTIPLIER;
+}
+
+RQ_INLINE f32 rad_to_deg(f32 radians) {
+    return radians * RQ_RAD2DEG_MULTIPLIER;
+}
