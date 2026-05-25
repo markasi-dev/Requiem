@@ -103,8 +103,6 @@ b8 platform_startup(
     u32 value_list[] = {state->screen->black_pixel, event_values};
 
     // FINALLY We create the window with this dogshit API.
-    // I genuinelly hate this API. WHY DO WE NEED COOKIES???? (well i do know but like... still this is abysmal fart doo doo shit).
-    // Tbf i do want a cookie right now. 
     (void)xcb_create_window(
         state->connection,
         XCB_COPY_FROM_PARENT, // depth
