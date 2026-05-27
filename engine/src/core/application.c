@@ -2,7 +2,7 @@
 #include "logger.h"
 
 #include "platform/platform.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/event.h"
 #include "core/input.h"
 #include "core/clock.h"

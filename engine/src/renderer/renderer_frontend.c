@@ -2,7 +2,7 @@
 #include "renderer_backend.h"
 
 #include "core/logger.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 // Backend render context
 static renderer_backend* backend = 0;

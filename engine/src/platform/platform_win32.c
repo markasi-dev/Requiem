@@ -255,6 +255,27 @@
                 b8 pressed = (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN);
                 keycodes key = (u16)w_param; // This contains our keycode.
 
+                // Alt key
+                if (w_param == VK_MENU) {
+                    if (GetKeyState(VK_RMENU) & 0x8000) {
+                        key = KEY_RALT;
+                    } else if (GetKeyState(VK_LMENU) & 0x8000) {
+                        key = KEY_LALT;
+                    }
+                } else if (w_param == VK_SHIFT) { // Shift key
+                    if (GetKeyState(VK_RSHIFT) & 0x8000) {
+                        key = KEY_RSHIFT;
+                    } else if (GetKeyState(VK_LSHIFT) & 0x8000) {
+                        key = KEY_LSHIFT;
+                    }
+                }  else if (w_param == VK_CONTROL) { // Control key
+                    if (GetKeyState(VK_RCONTROL) & 0x8000) {
+                        key = KEY_RCONTROL;
+                    } else if (GetKeyState(VK_LCONTROL) & 0x8000) {
+                        key = KEY_LCONTROL;
+                    }
+                }
+
                 // Pass into our input sub-system for processing.
                 input_process_key(key, pressed);
 

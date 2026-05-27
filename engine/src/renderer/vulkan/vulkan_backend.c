@@ -12,7 +12,7 @@
 #include "core/application.h"
 #include "core/logger.h"
 #include "core/rq_string.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 #include "containers/darray.h"
 
@@ -174,7 +174,7 @@ b8 vulkan_renderer_backend_initialize(renderer_backend* backend, const char* app
         &context,
         &context.main_renderpass,
         0, 0, context.framebuffer_width, context.framebuffer_height,
-        0.2f, 0.2f, 0.2f, 1.0f,
+        0.0f, 0.0f, 0.2f, 1.0f,
         1.0f,
         0);
 

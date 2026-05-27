@@ -2,7 +2,7 @@
 
 #include "vulkan_device.h"
 
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 
 void vulkan_image_create(

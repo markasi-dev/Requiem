@@ -2,7 +2,7 @@
 
 #include <entry.h>
 
-#include <core/rq_memory.h>
+#include <memory/rq_memory.h>
 
 // Define the function to create a game.
 b8 create_game(game* out_game) {

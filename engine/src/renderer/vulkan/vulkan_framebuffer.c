@@ -1,6 +1,6 @@
 #include "vulkan_framebuffer.h"
 
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 
 void vulkan_framebuffer_create(

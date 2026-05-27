@@ -1,6 +1,6 @@
 #include "vulkan_command_buffer.h"
 
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 
 void vulkan_command_buffer_allocate(

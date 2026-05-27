@@ -18,7 +18,7 @@ typedef double f64;
 
 // Boolean types
 typedef int b32;
-typedef unsigned char b8;
+typedef _Bool b8;
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
     #define STATIC_ASSERT _Static_assert

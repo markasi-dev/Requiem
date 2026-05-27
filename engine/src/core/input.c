@@ -1,6 +1,6 @@
 #include "core/input.h"
 #include "core/event.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 #include "core/asserts.h"
 
@@ -27,7 +27,7 @@ static b8 initialized = FALSE;
 static input_state state = {};
 
 void input_initialize() {
-    rq_zero_memory(&state, sizeof(input_state)); // Lets be predantic
+    rq_zero_memory(&state, sizeof(input_state)); // Lets be pedantic
     initialized = TRUE;
     RQ_INFO("Input Subsystem Initialized.");
 }
@@ -39,7 +39,7 @@ void input_shutdown() {
 
 void input_update(f64 deltaTime) {
     if (!initialized) {
-        return; // FUCK OFFFFFFFFFFFFFFFFFFF
+        return;
     }
 
     // Copy current states to previous states.
@@ -47,16 +47,29 @@ void input_update(f64 deltaTime) {
     rq_copy_memory(&state.mouse_previous, &state.mouse_current, sizeof(mouse_state));
 }
 
-// Now for the juicy bit.
 void input_process_key(keycodes key, b8 pressed) {
+
+    if (key == KEY_LALT) {
+        RQ_DEBUG("Left alt pressed.");
+    } else if(key == KEY_RALT) {
+        RQ_DEBUG("Right alt pressed.");
+    } 
+    
+    if(key == KEY_LCONTROL) {
+        RQ_DEBUG("Left control pressed.");
+    } else if (key == KEY_RCONTROL) {
+        RQ_DEBUG("Right control pressed.");
+    } 
+    
+    if(key == KEY_LSHIFT) {
+        RQ_DEBUG("Left shift pressed.");
+    } else if (key == KEY_RSHIFT) {
+        RQ_DEBUG("Right shift pressed.");
+    }
+
     // Only handle this if the state actually changed
     if (state.keyboard_current.keys[key] != pressed) {
         // Update internal state.
-        if (key > 256) {
-            RQ_ERROR("Keycode out of range: %u", key);
-            return;
-        }
-
         state.keyboard_current.keys[key] = pressed;
 
         // Fire off an event for immediate processing

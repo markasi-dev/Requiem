@@ -1,6 +1,6 @@
 #include "vulkan_renderpass.h"
 
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 
 void vulkan_renderpass_create(
@@ -27,7 +27,7 @@ void vulkan_renderpass_create(
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 
     // Attachments TODO: Make configurable
-    u32 attachment_description_count = 2;
+    const u32 attachment_description_count = 2;
     VkAttachmentDescription attachment_description[attachment_description_count];
 
     // Color attachment

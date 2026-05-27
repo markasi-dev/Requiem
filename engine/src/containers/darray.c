@@ -1,6 +1,6 @@
 #include "darray.h"
 
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 
 u64 header_size = DARRAY_FIELD_LENGTH * sizeof(u64);

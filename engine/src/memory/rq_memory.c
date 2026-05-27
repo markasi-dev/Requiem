@@ -1,7 +1,8 @@
 #include "rq_memory.h"
 
-#include "logger.h"
 #include "platform/platform.h"
+
+#include "core/logger.h"
 #include "core/rq_string.h"
 
 // TODO: Custom string lib
@@ -16,6 +17,7 @@ struct memory_stats {
 static const char* memory_tag_strings[MEMORY_TAG_MAX_TAGS] = {
     "UNKNOWN          ",
     "ARRAY            ",
+    "LINEAR_ALLOCATOR ",
     "DARRAY           ",
     "DICT             ",
     "RING_QUEUE       ",

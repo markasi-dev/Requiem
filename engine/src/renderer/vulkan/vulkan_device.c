@@ -2,7 +2,7 @@
 
 #include "core/logger.h"
 #include "core/rq_string.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 #include "containers/darray.h"
 
@@ -52,7 +52,7 @@ b8 vulkan_device_create(vulkan_context* context) {
     if (!transfer_shares_graphics_queue) {
         index_count++;
     }
-    u32 indices[index_count];
+    u32 indices[32];
     u8 index = 0;
     indices[index++] = context->device.graphics_queue_index;
     if (!present_shares_graphics_queue) {
@@ -62,7 +62,7 @@ b8 vulkan_device_create(vulkan_context* context) {
         indices[index++] = context->device.transfer_queue_index;
     }
 
-    VkDeviceQueueCreateInfo queue_create_infos[index_count];
+    VkDeviceQueueCreateInfo queue_create_infos[32];
     for (u32 i = 0; i < index_count; i++) {
         queue_create_infos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queue_create_infos[i].queueFamilyIndex = indices[i];

@@ -4,7 +4,7 @@ OBJ_DIR := obj
 
 ASSEMBLY := engine
 EXTENSION := .dll
-COMPILER_FLAGS := -g -fdeclspec # -fPIC
+COMPILER_FLAGS := -g -MD -Werror=vla -fdeclspec # -fPIC
 INCLUDE_FLAGS := -Iengine\src \
 				 -I$(VULKAN_SDK)\include \
 				 -Ivendor\glad\include

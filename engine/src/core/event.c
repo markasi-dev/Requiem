@@ -1,6 +1,6 @@
 #include "event.h"
 
-#include "rq_memory.h"
+#include "memory/rq_memory.h"
 #include "core/logger.h"
 #include "containers/darray.h"
 

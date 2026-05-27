@@ -3,7 +3,7 @@
 #include "vulkan_swapchain.h"
 
 #include "core/logger.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 // Internal helpers — not exposed in header.
 void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* swapchain);
@@ -94,7 +94,6 @@ void vulkan_swapchain_present(
 // ─────────────────────────────────────────────
 void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* swapchain) {
     VkExtent2D swapchain_extent = {width, height};
-    swapchain->max_frames_in_flight = 2;
 
     // Choose swap surface format.
     b8 found = FALSE;
@@ -143,6 +142,8 @@ void create(vulkan_context* context, u32 width, u32 height, vulkan_swapchain* sw
         image_count > context->device.swapchain_support.capabilities.maxImageCount) {
         image_count = context->device.swapchain_support.capabilities.maxImageCount;
     }
+
+    swapchain->max_frames_in_flight = image_count - 1;
 
     VkSwapchainCreateInfoKHR swapchain_create_info = {VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR};
     swapchain_create_info.surface          = context->surface;

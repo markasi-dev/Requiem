@@ -2,7 +2,7 @@
 
 #include "defines.h"
 #include "math_types.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 #define RQ_PI 3.14159265358979323846f
 #define RQ_PI_2 (2.0f * RQ_PI)

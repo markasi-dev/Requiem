@@ -1,5 +1,5 @@
 #include "core/rq_string.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 
 #include <string.h>
 

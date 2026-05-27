@@ -2,7 +2,7 @@
 
 #include "core/application.h"
 #include "core/logger.h"
-#include "core/rq_memory.h"
+#include "memory/rq_memory.h"
 #include "game_types.h"
 
 // Externally-defined function to create a game, to be filled out on the client side.
