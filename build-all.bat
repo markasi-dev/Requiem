@@ -21,20 +21,22 @@ ECHO "Building everything..."
 @REM POPD
 @REM IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
-ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 ECHO "                  BUILDING TESTBED                      "
-ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
 REM Engine
 make -f "Makefile.engine.windows.mak" all
 IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
-ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 ECHO "                  BUILDING TESTBED                      "
-ECHO "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
 REM Testbed
 make -f "Makefile.testbed.windows.mak" all
+IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
+
+ECHO "                BUILDING UNIT TESTS                      "
+
+REM Tests
+make -f "Makefile.tests.windows.mak" all
 IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
 ECHO "[Half life scientist]: Everything seems to be in order..."

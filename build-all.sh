@@ -27,5 +27,12 @@ then
 echo "Error:"$ERRORLEVEL && Exit
 f1
 
+make -f Makefile.tests.linux.mak all
+ERRORLEVEL=$?
+if [ $ERRORLEVEL -ne 0 ]
+then
+echo "Error:"$ERRORLEVEL && Exit
+f1
+
 echo "[Half life scientist]: Everything... seems to be in order!"
 echo "All assemblies built successfully."

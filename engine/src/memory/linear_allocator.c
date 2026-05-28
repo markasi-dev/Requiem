@@ -21,11 +21,12 @@ void linear_allocator_destroy(linear_allocator* allocator) {
     if (allocator) {
 
         allocator->allocated = 0;
+
         if (allocator->owns_memory && allocator->memory) {
             rq_free(allocator->memory, allocator->total_size, MEMORY_TAG_LINEAR_ALLOCATOR);
-        } else {
-            allocator->memory = 0; 
         }
+
+        allocator->memory = 0;
         allocator->total_size = 0;
         allocator->owns_memory = FALSE;
     }
@@ -33,7 +34,7 @@ void linear_allocator_destroy(linear_allocator* allocator) {
 
 void* linear_allocator_allocate(linear_allocator* allocator, u64 size) {
     if (allocator && allocator->memory) {
-        if (allocator->allocated + size < allocator->total_size) {
+        if (allocator->allocated + size > allocator->total_size) {
             u64 remaining = allocator->total_size - allocator->allocated;
             RQ_FATAL("linear_allocator_allocate - TRIED TO ALLOCATE %lluB WHILE ONLY %lluB REMAINING.", size, remaining);
             return 0;

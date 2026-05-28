@@ -8,10 +8,10 @@ typedef struct clock {
 } clock;
 
 // Update the clock
-void clock_update(clock* clock);
+RAPI void clock_update(clock* clock);
 
 // Start clock. Reset elapsed time.
-void clock_start(clock* clock);
+RAPI void clock_start(clock* clock);
 
 // Stop clock. Do not reset elapsed time.
-void clock_stop(clock* clock);
+RAPI void clock_stop(clock* clock);

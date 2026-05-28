@@ -9,14 +9,14 @@
     } 
 
 #define expect_should_not_be(expected, actual)                                                                      \
-    if (actual != expected) {                                                                                       \
+    if ((actual) == (expected)) {                                                                                       \
         RQ_ERROR("--> Expected %d != %d, but they are equal. File: %s:%d", expected, actual, __FILE__, __LINE__);   \
         return FALSE;                                                                                               \
     } 
 
 #define expect_float_to_be(expected, actual)                                                                        \
     if (rq_abs(expected - actual) > 0.001f) {                                                                       \
-        RQ_ERROR("--> Expected %d != %d, but they are equal. File: %s:%d", expected, actual, __FILE__, __LINE__);   \
+        RQ_ERROR("--> Expected %f != %f, but they are equal. File: %s:%d", expected, actual, __FILE__, __LINE__);   \
         return FALSE;                                                                                               \
     } 
 

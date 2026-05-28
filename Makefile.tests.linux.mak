@@ -1,7 +1,7 @@
 BUILD_DIR := bin
 OBJ_DIR := obj
 
-ASSEMBLY := testbed
+ASSEMBLY := tests
 EXTENSION := 
 COMPILER_FLAGS := -g -MD -Werror=vla -fdeclspec -fPIC
 INCLUDE_FLAGS := -Iengine/src -I$(VULKAN_SDK)/include
