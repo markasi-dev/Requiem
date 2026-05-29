@@ -34,14 +34,27 @@ static const char* memory_tag_strings[MEMORY_TAG_MAX_TAGS] = {
     "ENTITY_NODE      ",
     "SCENE            "};
 
-static struct memory_stats stats;
+typedef struct memory_system_state {
+    struct memory_stats stats;
+    u64 alloc_count;
+} memory_system_state;
 
-void initialize_memory() {
-    platform_zero_memory(&stats, sizeof(stats));
+static memory_system_state* state_ptr;
+
+void memory_initialize(u64* memory_requirements, void* state) {
+    *memory_requirements = sizeof(memory_system_state);
+    if (state == 0) {
+        return;
+    }
+
+    state_ptr = state;
+    state_ptr->alloc_count = 0;
+    platform_zero_memory(&state_ptr->stats, sizeof(state_ptr->stats));
     RQ_INFO("Initialized Memory.");
 }
 
-void shutdown_memory() {
+void memory_shutdown(void* state) { 
+    state_ptr = 0;
 }
 
 void* rq_allocate(u64 size, memory_tag tag) {
@@ -49,9 +62,12 @@ void* rq_allocate(u64 size, memory_tag tag) {
         RQ_WARN("rq_allocate called using MEMORY_TAG_UNKNOWN. Please re-class this allocation.");
     };
 
-    stats.total_allocated += size;
-    stats.tagged_allocations[tag] += size;
-
+    if (state_ptr) {
+        state_ptr->stats.total_allocated += size;
+        state_ptr->stats.tagged_allocations[tag] += size;
+        state_ptr->alloc_count++;
+    }
+    
     // TODO: Memory allignment.
     void* block = platform_allocate(size, FALSE);
     platform_zero_memory(block, size); 
@@ -63,8 +79,8 @@ void rq_free(void* block, u64 size, memory_tag tag) {
         RQ_WARN("rq_free called using MEMORY_TAG_UNKNOWN. Please re-class this allocation.");
     }
 
-    stats.total_allocated -= size;
-    stats.tagged_allocations[tag] -= size;
+    state_ptr->stats.total_allocated -= size;
+    state_ptr->stats.tagged_allocations[tag] -= size;
 
     //TODO: Memory allignment
     platform_free(block, FALSE);
@@ -92,19 +108,19 @@ char* get_memory_usage_string() {
     for (u32 i = 0; i < MEMORY_TAG_MAX_TAGS; i++) {
         char unit[4] = "XiB";
         float amount = 1.0f;
-        if (stats.tagged_allocations[i] >= gib) { // It's Gb.
+        if (state_ptr->stats.tagged_allocations[i] >= gib) { // It's Gb.
             unit[0] = 'G';
-            amount = stats.tagged_allocations[i] / (float)gib;
-        } else if (stats.tagged_allocations[i] >= mib) { // It's Mb.
+            amount = state_ptr->stats.tagged_allocations[i] / (float)gib;
+        } else if (state_ptr->stats.tagged_allocations[i] >= mib) { // It's Mb.
             unit[0] = 'M';
-            amount = stats.tagged_allocations[i] / (float)mib;
-        } else if (stats.tagged_allocations[i] >= kib) { // It's Kb.
+            amount = state_ptr->stats.tagged_allocations[i] / (float)mib;
+        } else if (state_ptr->stats.tagged_allocations[i] >= kib) { // It's Kb.
             unit[0] = 'K';
-            amount = stats.tagged_allocations[i] / (float)kib;
+            amount = state_ptr->stats.tagged_allocations[i] / (float)kib;
         } else { // It's bytes.
             unit[0] = 'B';
             unit[1] = 0;
-            amount = (float)stats.tagged_allocations[i];
+            amount = (float)state_ptr->stats.tagged_allocations[i];
         }
 
         i32 length = snprintf(buffer + offset, 8000, "  %s: %.2f%s\n", memory_tag_strings[i], amount, unit);
@@ -112,4 +128,12 @@ char* get_memory_usage_string() {
     }
     char* out_string = string_duplicate(buffer);
     return out_string;
+}
+
+u64 get_memory_alloc_count() {
+    if (state_ptr) {
+        return state_ptr->alloc_count;
+    } else {
+        return 0;
+    }
 }

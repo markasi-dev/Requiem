@@ -51,6 +51,7 @@ void event_shutdown() {
 }
 
 b8 event_register(u16 code, void* listener, PFN_on_event on_event) {
+
     if (is_initialized == FALSE) {
         return FALSE;
     }

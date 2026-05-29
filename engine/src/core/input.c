@@ -4,7 +4,6 @@
 #include "core/logger.h"
 #include "core/asserts.h"
 
-// I'm probably going to start using this sort of struct/enum style for readability.
 typedef struct keyboard_state {
     b8 keys[256];
 } keyboard_state;
@@ -110,7 +109,7 @@ void input_process_mouse_move(i16 x, i16 y) {
         // Fire event.
         event_context context;
         context.data.u16[0] = x;
-        context.data.u16[1] = x;
+        context.data.u16[1] = y;
         event_fire(EVENT_CODE_MOUSE_MOVED, 0, context);
     }
 }

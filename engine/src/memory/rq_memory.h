@@ -26,8 +26,8 @@ typedef enum {
     MEMORY_TAG_MAX_TAGS
 } memory_tag;
 
-RAPI void initialize_memory();
-RAPI void shutdown_memory();
+RAPI void memory_initialize(u64* memory_requirements, void* state);
+RAPI void memory_shutdown(void* state);
 
 RAPI void* rq_allocate(u64 size, memory_tag tag);
 
@@ -40,3 +40,5 @@ RAPI void* rq_copy_memory(void* dest, const void* source, u64 size);
 RAPI void* rq_set_memory(void* dest, i32 value, u64 size);
 
 RAPI char* get_memory_usage_string(void);
+
+RAPI u64 get_memory_alloc_count();

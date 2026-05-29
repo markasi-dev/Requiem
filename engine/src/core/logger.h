@@ -22,10 +22,12 @@ typedef enum {
     LOG_LEVEL_TRACE = 5
 } log_level;
 
-b8 logging_initialize();
-void logging_shutdown();
+b8 logging_initialize(u64* memory_requirement, void* state);
+void logging_shutdown(void* state);
 
 RAPI void log_output(log_level level, const char* msg, ...);
+
+RAPI void log_line();
 
 // Logs a fatal-level message
 #define RQ_FATAL(msg, ...) log_output(LOG_LEVEL_FATAL, msg, ##__VA_ARGS__);
