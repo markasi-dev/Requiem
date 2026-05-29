@@ -19,11 +19,14 @@
     #include "renderer/vulkan/vulkan_types.inl"
     #include "renderer/vulkan/vulkan_platform.h"
 
-    typedef struct {
+    typedef struct platform_state {
         HINSTANCE h_instance;
         HWND hwnd;
         VkSurfaceKHR surface;
-    } internal_state;
+
+    } platform_state;
+
+    static platform_state *state_ptr;
 
     // Clock
     static f64 clock_frequency;
@@ -31,21 +34,31 @@
 
     LRESULT CALLBACK win32_process_message(HWND hwnd, u32 msg, WPARAM w_param, LPARAM l_param);
 
+    void clock_start() {
+        LARGE_INTEGER frequency;
+        QueryPerformanceFrequency(&frequency);
+        clock_frequency = 1.0f / (f64)frequency.QuadPart;
+        QueryPerformanceCounter(&start_time);
+    }
+
     b8 platform_startup(
+        u64 *memory_requirement,
+        void *state,
         platform_state* plat_state,
         i32 x,
         i32 y,
         u32 width,
         u32 height,
         const char* application_name) {
-     
-        plat_state->internal_state = malloc(sizeof(internal_state));
-        internal_state *state = (internal_state *)plat_state->internal_state;
-
-        state->h_instance = GetModuleHandleA(0);
+        *memory_requirement = sizeof(platform_state);
+        if (state == 0) {
+            return TRUE;
+        }
+        state_ptr = state;
+        state_ptr->h_instance = GetModuleHandleA(0);
         
         // Setup and register window class.
-        HICON icon = LoadIcon(state->h_instance, IDI_APPLICATION);
+        HICON icon = LoadIcon(state_ptr->h_instance, IDI_APPLICATION);
         WNDCLASS wc;
         memset(&wc, 0, sizeof(wc));    // Put dat thang on the stack!
         wc.style = CS_DBLCLKS;  // Gets double-clicks.
@@ -96,7 +109,7 @@
         HWND handle = CreateWindowEx(
             window_ex_style, "requiem_window_class", application_name,
             window_style, window_x, window_y, window_width, window_height,
-            0, 0, state->h_instance, 0);
+            0, 0, state_ptr->h_instance, 0);
         
         if (handle == 0) {
             MessageBoxA(0, "Window creation failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
@@ -104,7 +117,7 @@
             RQ_FATAL("Window creation failed!");
             return FALSE;
         } else {
-            state->hwnd = handle;
+            state_ptr->hwnd = handle;
         }
 
         // Show the window... finally!
@@ -112,7 +125,7 @@
         i32 show_window_command_flags = should_activate ? SW_SHOW : SW_SHOWNOACTIVATE;
         // If initially minimized, use SW_MINIMIZE : SW_SHOWMINNOACTIVE;
         // If initially maximized, use SW_SHOWMAXIMIZED : SW_MAXIMIZE;
-        ShowWindow(state->hwnd, show_window_command_flags); // Activate the window.
+        ShowWindow(state_ptr->hwnd, show_window_command_flags); // Activate the window.
 
         // Clock setup
         LARGE_INTEGER frequency;
@@ -127,7 +140,7 @@
         // Simply cold-cast to the known type.
         internal_state *state = (internal_state *)plat_state->internal_state;
 
-        if (state->hwnd) {
+        if (state_ptr->hwnd) {
             DestroyWindow(state->hwnd);
             state->hwnd = 0;
         }

@@ -143,8 +143,8 @@ typedef enum keys {
     KEYS_MAX_KEYS
 } keycodes;  // SWEET MOTHER OF NEPTUNE
 
-void input_initialize();
-void input_shutdown();
+void input_initialize(u64* memory_requirement, void* state);
+void input_shutdown(void* state);
 void input_update(f64 delta_time);
 
 // Keyboard input
@@ -162,7 +162,7 @@ RAPI b8 input_was_mouse_button_down(buttons button);
 RAPI b8 input_was_mouse_button_released(buttons button);
 RAPI void input_get_mouse_position(i32* x, i32* y);
 RAPI void input_get_previous_mouse_position(i32* x, i32* y);
-RAPI i32 input_get_mouse_position_x();
+RAPI i32 input_get_mouse_pos5ition_x();
 RAPI i32 input_get_mouse_position_y();
 RAPI i32 input_get_previous_mouse_position_x();
 RAPI i32 input_get_previous_mouse_position_y();

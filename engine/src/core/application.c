@@ -18,7 +18,6 @@ typedef struct {
     game* game_inst;
     b8 is_running;
     b8 is_suspended;
-    platform_state platform;
     i16 width; 
     i16 height;
     clock clock;    
@@ -26,11 +25,21 @@ typedef struct {
     linear_allocator systems_allocator;
 
     // System states and requirements.
+    u64 event_system_memory_requirement;
+    void* event_system_state;
+
     u64 memory_system_memory_requirement;
     void* memory_system_state;
 
     u64 logging_system_memory_requirement;
     void* logging_system_state;
+
+    u64 input_system_memory_requirement;
+    void* input_system_state;
+
+    u64 render_system_memory_requirement;
+    void* render_system_state;
+
 } application_state;
 
 static application_state* app_state; 
@@ -55,10 +64,12 @@ b8 application_create(game* game_inst) {
     u64 systems_allocator_total_size = 64 * 1024 * 1024; // 64 MiB
     linear_allocator_create(systems_allocator_total_size, 0, &app_state->systems_allocator);
 
-
-
     // Initialize subsystems.   
-    // TODO: Create an interface to make this repetitive code non-repetitive
+
+    // Events
+    event_system_initialize(&app_state->event_system_memory_requirement, 0);
+    app_state->event_system_state = linear_allocator_allocate(&app_state->systems_allocator, app_state->event_system_memory_requirement);
+    event_system_initialize(&app_state->event_system_memory_requirement, app_state->event_system_state);
 
     // Memory
     memory_initialize(&app_state->memory_system_memory_requirement, 0);
@@ -73,8 +84,10 @@ b8 application_create(game* game_inst) {
         return FALSE;
     }
 
-
-    input_initialize();
+    // Input
+    input_initialize(&app_state->input_system_memory_requirement, 0);
+    app_state->input_system_state = linear_allocator_allocate(&app_state->systems_allocator, app_state->input_system_memory_requirement);
+    input_initialize(&app_state->input_system_memory_requirement, app_state->input_system_state);
 
     app_state->is_running = TRUE;
     app_state->is_suspended = FALSE;

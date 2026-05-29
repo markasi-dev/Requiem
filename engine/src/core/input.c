@@ -21,29 +21,31 @@ typedef struct input_state {
     mouse_state mouse_previous;
 } input_state; // Ye bird had to cancel her doctors appointment cuz she was sick.
 
-// Internal input state
-static b8 initialized = FALSE;
-static input_state state = {};
+static input_state* state_ptr;
 
-void input_initialize() {
-    rq_zero_memory(&state, sizeof(input_state)); // Lets be pedantic
-    initialized = TRUE;
+void input_initialize(u64* memory_requirement, void* state) {
+    *memory_requirement = sizeof(input_state);
+    if (state == 0) {
+        return;
+    }
+    rq_zero_memory(state, sizeof(input_state));
+    state_ptr = state;
     RQ_INFO("Input Subsystem Initialized.");
 }
 
-void input_shutdown() {
+void input_shutdown(void* state) {
     // TODO: Add shutdown routines when needed.
-    initialized = FALSE;
+    state_ptr = FALSE;
 }
 
 void input_update(f64 deltaTime) {
-    if (!initialized) {
+    if (!state_ptr) {
         return;
     }
 
     // Copy current states to previous states.
-    rq_copy_memory(&state.keyboard_previous, &state.keyboard_current, sizeof(keyboard_state));
-    rq_copy_memory(&state.mouse_previous, &state.mouse_current, sizeof(mouse_state));
+    rq_copy_memory(&state_ptr->keyboard_previous, &state_ptr->keyboard_current, sizeof(keyboard_state));
+    rq_copy_memory(&state_ptr->mouse_previous, &state_ptr->mouse_current, sizeof(mouse_state));
 }
 
 void input_process_key(keycodes key, b8 pressed) {
@@ -67,9 +69,9 @@ void input_process_key(keycodes key, b8 pressed) {
     }
 
     // Only handle this if the state actually changed
-    if (state.keyboard_current.keys[key] != pressed) {
-        // Update internal state.
-        state.keyboard_current.keys[key] = pressed;
+    if (state_ptr->keyboard_current.keys[key] != pressed) {
+        // Update internal state_ptr->
+        state_ptr->keyboard_current.keys[key] = pressed;
 
         // Fire off an event for immediate processing
         event_context context;
@@ -80,14 +82,14 @@ void input_process_key(keycodes key, b8 pressed) {
 
 void input_process_button(buttons mb, b8 pressed) {
     // Only handle this if the state actually changed
-    if (state.mouse_current.buttons[mb] != pressed) {
-        // Update internal state.
+    if (state_ptr->mouse_current.buttons[mb] != pressed) {
+        // Update internal state_ptr->
         if (mb > BUTTON_MAX_BUTTONS) {
             RQ_ERROR("Mouse button out of range: %u", mb);
             return;
         }
 
-        state.mouse_current.buttons[mb] = pressed;
+        state_ptr->mouse_current.buttons[mb] = pressed;
 
         // Fire off an event for immediate processing
         event_context context;  
@@ -98,13 +100,13 @@ void input_process_button(buttons mb, b8 pressed) {
 
 void input_process_mouse_move(i16 x, i16 y) {
     // Only process if dirty
-    if (state.mouse_current.x != x || state.mouse_current.y != y) {
+    if (state_ptr->mouse_current.x != x || state_ptr->mouse_current.y != y) {
         //NOTE: ENABLE IF DEBUGGING
         //RQ_DEBUG("Mouse pos: %i, %i", x, y);
 
-        // Update internal state.
-        state.mouse_current.x = x;
-        state.mouse_current.y = y;
+        // Update internal state_ptr->
+        state_ptr->mouse_current.x = x;
+        state_ptr->mouse_current.y = y;
 
         // Fire event.
         event_context context;
@@ -124,98 +126,98 @@ void input_process_mouse_wheel(i8 z_delta) {
 }
 
 RAPI b8 input_is_key_down(keycodes key) {
-    if (!initialized) {
+    if (!state_ptr) {
         return FALSE;
     }
-    return state.keyboard_current.keys[key] == TRUE;
+    return state_ptr->keyboard_current.keys[key] == TRUE;
 }
 
 RAPI b8 input_is_key_up(keycodes key) {
-    if (!initialized) {
+    if (!state_ptr) {
         return TRUE;
     }
-    return state.keyboard_current.keys[key] == FALSE;
+    return state_ptr->keyboard_current.keys[key] == FALSE;
 }
 
 RAPI b8 input_was_key_down(keycodes key) {
-    if (!initialized) {
+    if (!state_ptr) {
         return FALSE;
     }
-    return state.keyboard_previous.keys[key] == TRUE;
+    return state_ptr->keyboard_previous.keys[key] == TRUE;
 }
 
 RAPI b8 input_was_key_released(keycodes key) {
-    if (!initialized) {
+    if (!state_ptr) {
         return TRUE;
     }
-    return state.keyboard_previous.keys[key] == FALSE;
+    return state_ptr->keyboard_previous.keys[key] == FALSE;
 }
 
 // mouse input
 b8 input_is_mouse_button_down(buttons button) {
-    if (!initialized) {
+    if (!state_ptr) {
         return FALSE;
     }
-    return state.mouse_current.buttons[button] == TRUE;
+    return state_ptr->mouse_current.buttons[button] == TRUE;
 }
 
 b8 input_is_mouse_button_up(buttons button) {
-    if (!initialized) {
+    if (!state_ptr) {
         return TRUE;
     }
-    return state.mouse_current.buttons[button] == FALSE;
+    return state_ptr->mouse_current.buttons[button] == FALSE;
 }
 
 b8 input_was_mouse_button_down(buttons button) {
-    if (!initialized) {
+    if (!state_ptr) {
         return FALSE;
     }
-    return state.mouse_previous.buttons[button] == TRUE;
+    return state_ptr->mouse_previous.buttons[button] == TRUE;
 }
 
 b8 input_was_mouse_button_up(buttons button) {
-    if (!initialized) {
+    if (!state_ptr) {
         return TRUE;
     }
-    return state.mouse_previous.buttons[button] == FALSE;
+    return state_ptr->mouse_previous.buttons[button] == FALSE;
 }
 
 void input_get_mouse_position(i32* x, i32* y) {
-    if (!initialized) {
+    if (!state_ptr) {
         *x = 0;
         *y = 0;
         return;
     }
-    *x = state.mouse_current.x;
-    *y = state.mouse_current.y;
+    *x = state_ptr->mouse_current.x;
+    *y = state_ptr->mouse_current.y;
 }
 
 void input_get_previous_mouse_position(i32* x, i32* y) {
-    if (!initialized) {
+    if (!state_ptr) {
         *x = 0;
         *y = 0;
         return;
     }
-    *x = state.mouse_previous.x;
-    *y = state.mouse_previous.y;
+    *x = state_ptr->mouse_previous.x;
+    *y = state_ptr->mouse_previous.y;
 }
 
 i32 input_get_mouse_position_x() {
-    RQ_ASSERT(initialized);
-    return state.mouse_current.x;
+    RQ_ASSERT(state_ptr);
+    return state_ptr->mouse_current.x;
 }
 
 i32 input_get_mouse_position_y() {
-    RQ_ASSERT(initialized);
-    return state.mouse_current.y;
+    RQ_ASSERT(state_ptr);
+    return state_ptr->mouse_current.y;
 }
 
 i32 input_get_previous_mouse_position_x() {
-    RQ_ASSERT(initialized);
-    return state.mouse_previous.x;
+    RQ_ASSERT(state_ptr);
+    return state_ptr->mouse_previous.x;
 }
 
 i32 input_get_previous_mouse_position_y() {
-    RQ_ASSERT(initialized);
-    return state.mouse_previous.y;
+    RQ_ASSERT(state_ptr);
+    return state_ptr->mouse_previous.y;
 }
